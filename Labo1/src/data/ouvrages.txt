@@ -1,0 +1,6 @@
+C;1;03 05 2022;Diary of a Madman;Ozzy Osbourne
+L;2;08 08 2022;Prelude to Foundation;Isaac Asimov;Doubleday
+P;3;null;23 09 2022;National Geographic;44;4
+P;4;02 07 2022;Popular Mechanics;133;8
+C;5;null;The Dark Side of the Moon;Pink Floyd
+L;6;null;Fifty Shades of Grey;E.L. James;Vintage Books
