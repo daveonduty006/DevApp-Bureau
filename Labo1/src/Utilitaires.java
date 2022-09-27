@@ -1,11 +1,8 @@
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.io.*;
 
 public class Utilitaires {
 
-    public static final String MSG1 = " ne peut pas etre inferieure a l'annee actuelle, soit ";
-    public static final String MSG2 = "Impossible de valider le jour puisque votre mois est invalide";
     static BufferedReader tmpReadTexte;
     static BufferedWriter tmpWriteTexte;
     static ObjectInputStream tmpReadObj;
