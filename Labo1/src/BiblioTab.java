@@ -1,14 +1,12 @@
 import java.io.*;
 import java.util.*;
-import javax.swing.*;
 
 public class BiblioTab {
 	
 	static final int TAILLE_MAX= 20;
 	static int compteur;  
     static BufferedReader clavier;
-	static JTextArea sortie;
-	static List<Ouvrage> biblio;
+	static Ouvrage biblio[];
 	
 	//
 	
@@ -18,7 +16,9 @@ public class BiblioTab {
 	
 	//
 	
-	
+	public void ajouterOuvrage() {
+		
+	}
 	
 	//
 	
@@ -26,7 +26,9 @@ public class BiblioTab {
 	public String toString() {
 		String rep= "Nombre d'ouvrages: "+compteur+"\n\n";
 		for(Ouvrage unOuvrage : biblio) {
-			rep += unOuvrage.toString()+"\n";
+			if(unOuvrage != null) {
+				rep += unOuvrage.toString()+"\n";
+			}
 		}
 		return rep;
 	}
@@ -34,7 +36,7 @@ public class BiblioTab {
 	//
 	
 	private void chargerTableau(List<ArrayList<String>> listeAttributs) {
-		biblio= new ArrayList<>();
+		biblio= new Ouvrage[TAILLE_MAX];
 		compteur= 0;
 		listeAttributs.forEach((donneesOuvrage) -> {
 			char type= donneesOuvrage.get(0).charAt(0);
@@ -52,16 +54,16 @@ public class BiblioTab {
 				String auteur= donneesOuvrage.get(4);
 				String editeur= donneesOuvrage.get(5);
 				Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
-				biblio.add(unLivre);
+				biblio[compteur]= unLivre;
 			}else if(type == 'P') {
 				int numSerie= Integer.parseInt(donneesOuvrage.get(4));
 				int periodicite= Integer.parseInt(donneesOuvrage.get(5));
 				Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
-				biblio.add(unPeriodique);
+				biblio[compteur]= unPeriodique;
 			}else if(type == 'C') {
 				String auteur= donneesOuvrage.get(4);
 				CD unCD= new CD(num,dateEmprunt,titre,auteur);
-				biblio.add(unCD);
+				biblio[compteur]= unCD;
 			}
 			compteur++;
 		});

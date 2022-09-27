@@ -29,7 +29,12 @@ public class Ouvrage {
 	
 	@Override
 	public String toString() {
-		return "Ouvrage no."+this.num+"\n"+"Date d'Emprunt: "+this.dateEmprunt+"\n";
+		String rep= (this.dateEmprunt == null) ?
+			"Ouvrage no."+this.num+"\n"+"Date d'Emprunt: disponible\n"
+		:
+			"Ouvrage no."+this.num+"\n"+"Date d'Emprunt: "+this.dateEmprunt+"\n";
+		return rep;
+		
 	}
 	
 
