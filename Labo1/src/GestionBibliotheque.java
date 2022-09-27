@@ -1,8 +1,15 @@
+import java.io.*;
+import java.util.*;
 
 public class GestionBibliotheque {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	static final String FICHIER_TEXTE= "src/data/ouvrages.txt";
+	static List<ArrayList<String>> listeAttributs;
+    static BufferedReader clavier;
+	
+	public static void main(String[] args) throws Exception {
+		listeAttributs= (ArrayList<ArrayList<String>>) Utilitaires.chargerFichierTexte(FICHIER_TEXTE, ";");
+		BiblioTab biblioTab= new BiblioTab(listeAttributs);
 
 	}
 

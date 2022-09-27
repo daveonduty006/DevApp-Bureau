@@ -37,7 +37,7 @@ public class Periodique extends Ouvrage {
 	@Override
 	public String toString() {
 		String rep= super.toString();
-		rep= rep+this.titre+" "+this.numSerie+" "+this.periodicite+" ";
+		rep= rep+"Titre: "+this.titre+"\n"+"Numero: "+this.numSerie+"\n"+"Periodicite: "+this.periodicite+"\n";
 		return rep;
 	}
 

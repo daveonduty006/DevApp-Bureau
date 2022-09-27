@@ -36,7 +36,7 @@ public class Livre extends Ouvrage {
 	@Override
 	public String toString() {
 		String rep= super.toString();
-		rep= rep+this.auteur+" "+this.titre+" "+this.editeur+" ";
+		rep= rep+"Titre: "+this.titre+"\n"+"Auteur: "+this.auteur+"\n"+"Editeur: "+this.editeur+"\n";
 		return rep;
 	}
 	

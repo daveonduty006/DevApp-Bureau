@@ -1,20 +1,10 @@
 abstract class Bibliotheque {
 	
-	public void supprimerOuvrage() {
-		
-	}
+	abstract void supprimerOuvrage();
 	
-	public void rechercherOuvrage() {
-		
-	}
+	abstract void rechercherOuvrage();
 	
-	public void ajouterOuvrage() {
-		
-	}
-	
-	public void afficherOuvrages() {
-		
-	}
+	abstract void ajouterOuvrage();
 	
 	
 

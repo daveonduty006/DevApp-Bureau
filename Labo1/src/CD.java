@@ -27,7 +27,7 @@ public class CD extends Ouvrage {
 	@Override
 	public String toString() {
 		String rep= super.toString();
-		rep= rep+this.titre+" "+this.auteur+" ";
+		rep= rep+"Titre: "+this.titre+"\n"+"Auteur: "+this.auteur+"\n";
 		return rep;
 	}
 

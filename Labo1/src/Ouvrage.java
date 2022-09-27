@@ -29,7 +29,7 @@ public class Ouvrage {
 	
 	@Override
 	public String toString() {
-		return this.num+" "+this.dateEmprunt+" ";
+		return "Ouvrage no."+this.num+"\n"+"Date d'Emprunt: "+this.dateEmprunt+"\n";
 	}
 	
 
