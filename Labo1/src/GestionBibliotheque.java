@@ -10,7 +10,6 @@ public class GestionBibliotheque {
 	public static void main(String[] args) throws Exception {
 		listeAttributs= (ArrayList<ArrayList<String>>) Utilitaires.chargerFichierTexte(FICHIER_TEXTE, ";");
 		BiblioTab biblioTab= new BiblioTab(listeAttributs);
-		System.out.print(biblioTab.toString());
 	}
 
 }

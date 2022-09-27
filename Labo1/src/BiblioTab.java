@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class BiblioTab {
+public class BiblioTab extends Bibliotheque {
 	
 	static final int TAILLE_MAX= 20;
 	static int compteur;  

@@ -2,7 +2,7 @@ abstract class Bibliotheque {
 	
 	abstract void supprimerOuvrage();
 	
-	abstract void rechercherOuvrage();
+	abstract Ouvrage rechercherOuvrage();
 	
 	abstract void ajouterOuvrage();
 	
