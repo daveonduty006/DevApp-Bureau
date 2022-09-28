@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 
 public class BiblioTab extends Bibliotheque {
 	
@@ -17,6 +18,35 @@ public class BiblioTab extends Bibliotheque {
 	//
 	
 	public void ajouterOuvrage() {
+		int num= compteur+1;
+		Date dateEmprunt= null;
+		UIManager.put("OptionPane.cancelButtonText", "Annuler");
+		String titre= JOptionPane.showInputDialog(
+                      null, "Entrez le titre du nouvel ouvrage: ", "Ajout d'un nouvel ouvrage",
+                      JOptionPane.PLAIN_MESSAGE);
+		titre= formatterStringMajuscules(titre);
+		UIManager.put("OptionPane.cancelButtonText", "CD");
+		UIManager.put("OptionPane.noButtonText", "Periodique");
+		UIManager.put("OptionPane.yesButtonText", "Livre");
+		int rep= JOptionPane.showConfirmDialog(
+				 null, "Choisissez le type du nouvel ouvrage", "Ajout d'un nouvel ouvrage", 
+				 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		switch(rep) {
+			case JOptionPane.YES_OPTION:
+				UIManager.put("OptionPane.cancelButtonText", "Annuler");
+				String auteur= JOptionPane.showInputDialog(
+	                           null, "Entrez le nom de l'auteur du livre: ", 
+	                           "Ajout d'un nouvel ouvrage", JOptionPane.PLAIN_MESSAGE);
+				auteur= formatterStringMajuscules(auteur);
+				String editeur= JOptionPane.showInputDialog(
+                                null, "Entrez la maison d'edition du livre: ", 
+                                "Ajout d'un nouvel ouvrage", JOptionPane.PLAIN_MESSAGE);
+				editeur= formatterStringMajuscules(editeur);
+				Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
+				biblio[compteur]= unLivre;
+				compteur++;
+				
+		}
 		
 	}
 	
@@ -68,5 +98,30 @@ public class BiblioTab extends Bibliotheque {
 			compteur++;
 		});
 	}
+	
+	private String formatterStringMajuscules(String str) {
+		String strFormatte= "";
+		for(String mot : str.split(" ")) {
+			String motSansMajuscules= "";
+			for(char c : mot.toCharArray()) {
+				if(Character.isLetter(c)) {
+					motSansMajuscules+= Character.toLowerCase(c);
+				}else {
+					motSansMajuscules+= c;
+				}
+			}
+			if(Character.isLetter(motSansMajuscules.charAt(0))){
+				mot= motSansMajuscules.substring(0,1).toUpperCase() + motSansMajuscules.substring(1);
+			}
+			strFormatte+= mot+" ";
+		}		
+		return strFormatte;
+	}
+	
+	/*
+	private static void afficherMessage(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "MESSAGES", JOptionPane.PLAIN_MESSAGE);
+	}
+	*/
 
 }

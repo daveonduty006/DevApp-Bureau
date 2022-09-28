@@ -37,7 +37,6 @@ public class Main {
 		
 		/////////////////////////////////////////////////////////
 		
-		/*
 		int answer= JOptionPane.showConfirmDialog(
 					null, "bro do you even code?", "ConfirmDialogBox", 
 					JOptionPane.YES_NO_CANCEL_OPTION);
@@ -47,7 +46,6 @@ public class Main {
 		//  No        returns  1
 		//  Cancel    returns  2
 		//  X-Exiting returns -1 
-		*/
 		
 		/////////////////////////////////////////////////////////
 		
@@ -60,6 +58,7 @@ public class Main {
 		
 		/////////////////////////////////////////////////////////
 		
+		/*
 		String[] responses= {"No, you're awesome!",
 				             "Thank you!",
 				             "*blush*"};
@@ -69,7 +68,7 @@ public class Main {
 		null, "You are awesome!", "Secret message", 
 		JOptionPane.YES_NO_CANCEL_OPTION, 
 		JOptionPane.INFORMATION_MESSAGE, icon, responses, 0);
-		
+		*/
 	}
 
 }
