@@ -1,11 +1,10 @@
 abstract class Bibliotheque {
 	
-	abstract void supprimerOuvrage();
-	
-	abstract Ouvrage rechercherOuvrage();
-	
 	abstract void ajouterOuvrage();
 	
+	abstract void supprimerOuvrage();
+	
+	abstract int rechercherOuvrage(int num);
 	
 
 	

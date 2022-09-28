@@ -17,37 +17,94 @@ public class BiblioTab extends Bibliotheque {
 	
 	//
 	
+	public int rechercherOuvrage(int num) {
+		int i= 0;
+		int posTrouve= -1;
+		while(i < biblio.length && posTrouve == -1) {
+			if(biblio[i] == null) {
+				i++;
+			}else if(biblio[i].num == num) {
+				posTrouve= i;
+			}else {
+				i++;
+			}
+		}
+		return posTrouve;
+	}
+	
+	public void supprimerOuvrage() {
+		String msg;
+		int num= Integer.parseInt(
+				 JOptionPane.showInputDialog(
+	             null, "Entrez le numero de l'ouvrage a supprimer: ", "Suppression d'un ouvrage",
+                 JOptionPane.PLAIN_MESSAGE));
+		int posOuvrage= rechercherOuvrage(num);
+		if(posOuvrage != -1) {
+			for(int i=posOuvrage; i < biblio.length-1; i++) {
+				biblio[i]= biblio[i+1];
+			}
+			compteur--;
+			msg= "Ouvrage supprime";
+		}else {
+			msg= "Ouvrage inexistant";
+		}
+		JOptionPane.showMessageDialog(
+	    null, msg, "Suppression d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+	}
+	
 	public void ajouterOuvrage() {
 		int num= compteur+1;
 		Date dateEmprunt= null;
 		UIManager.put("OptionPane.cancelButtonText", "Annuler");
 		String titre= JOptionPane.showInputDialog(
-                      null, "Entrez le titre du nouvel ouvrage: ", "Ajout d'un nouvel ouvrage",
+                      null, "Entrez le titre du nouvel ouvrage: ", "Ajout d'un ouvrage",
                       JOptionPane.PLAIN_MESSAGE);
 		titre= formatterStringMajuscules(titre);
 		UIManager.put("OptionPane.cancelButtonText", "CD");
 		UIManager.put("OptionPane.noButtonText", "Periodique");
 		UIManager.put("OptionPane.yesButtonText", "Livre");
 		int rep= JOptionPane.showConfirmDialog(
-				 null, "Choisissez le type du nouvel ouvrage", "Ajout d'un nouvel ouvrage", 
+				 null, "Choisissez le type du nouvel ouvrage", "Ajout d'un ouvrage", 
 				 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		UIManager.put("OptionPane.cancelButtonText", "Annuler");
+		String auteur;
 		switch(rep) {
 			case JOptionPane.YES_OPTION:
-				UIManager.put("OptionPane.cancelButtonText", "Annuler");
-				String auteur= JOptionPane.showInputDialog(
-	                           null, "Entrez le nom de l'auteur du livre: ", 
-	                           "Ajout d'un nouvel ouvrage", JOptionPane.PLAIN_MESSAGE);
+			    auteur= JOptionPane.showInputDialog(
+	                    null, "Entrez le nom de l'auteur du livre: ", 
+	                    "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 				auteur= formatterStringMajuscules(auteur);
 				String editeur= JOptionPane.showInputDialog(
                                 null, "Entrez la maison d'edition du livre: ", 
-                                "Ajout d'un nouvel ouvrage", JOptionPane.PLAIN_MESSAGE);
+                                "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 				editeur= formatterStringMajuscules(editeur);
 				Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
 				biblio[compteur]= unLivre;
-				compteur++;
-				
+				break;
+			case JOptionPane.NO_OPTION:
+				int numSerie= Integer.parseInt(
+							  JOptionPane.showInputDialog(
+							  null, "Entrez le numero de serie du périodique: ",
+							  "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
+				int periodicite= Integer.parseInt(
+						  		 JOptionPane.showInputDialog(
+						         null, "Entrez la periodicite du périodique: ",
+						         "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
+				Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
+				biblio[compteur]= unPeriodique;
+				break;
+			case JOptionPane.CANCEL_OPTION:
+				auteur= JOptionPane.showInputDialog(
+                        null, "Entrez le nom de l'auteur du CD: ", 
+                        "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+				auteur= formatterStringMajuscules(auteur);
+				CD unCD= new CD(num,dateEmprunt,titre,auteur);
+				biblio[compteur]= unCD;
+				break;
 		}
-		
+		compteur++;
+		JOptionPane.showMessageDialog(
+	    null, "Ouvrage cree", "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	//
@@ -117,11 +174,5 @@ public class BiblioTab extends Bibliotheque {
 		}		
 		return strFormatte;
 	}
-	
-	/*
-	private static void afficherMessage(String msg) {
-		JOptionPane.showMessageDialog(null, msg, "MESSAGES", JOptionPane.PLAIN_MESSAGE);
-	}
-	*/
 
 }
