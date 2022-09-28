@@ -53,58 +53,63 @@ public class BiblioTab extends Bibliotheque {
 	}
 	
 	public void ajouterOuvrage() {
-		int num= compteur+1;
-		Date dateEmprunt= null;
-		UIManager.put("OptionPane.cancelButtonText", "Annuler");
-		String titre= JOptionPane.showInputDialog(
-                      null, "Entrez le titre du nouvel ouvrage: ", "Ajout d'un ouvrage",
-                      JOptionPane.PLAIN_MESSAGE);
-		titre= formatterStringMajuscules(titre);
-		UIManager.put("OptionPane.cancelButtonText", "CD");
-		UIManager.put("OptionPane.noButtonText", "Periodique");
-		UIManager.put("OptionPane.yesButtonText", "Livre");
-		int rep= JOptionPane.showConfirmDialog(
-				 null, "Choisissez le type du nouvel ouvrage", "Ajout d'un ouvrage", 
-				 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-		UIManager.put("OptionPane.cancelButtonText", "Annuler");
-		String auteur;
-		switch(rep) {
-			case JOptionPane.YES_OPTION:
-			    auteur= JOptionPane.showInputDialog(
-	                    null, "Entrez le nom de l'auteur du livre: ", 
-	                    "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
-				auteur= formatterStringMajuscules(auteur);
-				String editeur= JOptionPane.showInputDialog(
-                                null, "Entrez la maison d'edition du livre: ", 
-                                "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
-				editeur= formatterStringMajuscules(editeur);
-				Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
-				biblio[compteur]= unLivre;
-				break;
-			case JOptionPane.NO_OPTION:
-				int numSerie= Integer.parseInt(
-							  JOptionPane.showInputDialog(
-							  null, "Entrez le numero de serie du périodique: ",
-							  "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
-				int periodicite= Integer.parseInt(
-						  		 JOptionPane.showInputDialog(
-						         null, "Entrez la periodicite du périodique: ",
-						         "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
-				Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
-				biblio[compteur]= unPeriodique;
-				break;
-			case JOptionPane.CANCEL_OPTION:
-				auteur= JOptionPane.showInputDialog(
-                        null, "Entrez le nom de l'auteur du CD: ", 
-                        "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
-				auteur= formatterStringMajuscules(auteur);
-				CD unCD= new CD(num,dateEmprunt,titre,auteur);
-				biblio[compteur]= unCD;
-				break;
+		if(biblio[biblio.length-1] == null) {
+			int num= compteur+1;
+			Date dateEmprunt= null;
+			UIManager.put("OptionPane.cancelButtonText", "Annuler");
+			String titre= JOptionPane.showInputDialog(
+	                      null, "Entrez le titre du nouvel ouvrage: ", "Ajout d'un ouvrage",
+	                      JOptionPane.PLAIN_MESSAGE);
+			titre= formatterStringMajuscules(titre);
+			UIManager.put("OptionPane.cancelButtonText", "CD");
+			UIManager.put("OptionPane.noButtonText", "Periodique");
+			UIManager.put("OptionPane.yesButtonText", "Livre");
+			int rep= JOptionPane.showConfirmDialog(
+					 null, "Choisissez le type du nouvel ouvrage", "Ajout d'un ouvrage", 
+					 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			UIManager.put("OptionPane.cancelButtonText", "Annuler");
+			String auteur;
+			switch(rep) {
+				case JOptionPane.YES_OPTION:
+				    auteur= JOptionPane.showInputDialog(
+		                    null, "Entrez le nom de l'auteur du livre: ", 
+		                    "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+					auteur= formatterStringMajuscules(auteur);
+					String editeur= JOptionPane.showInputDialog(
+	                                null, "Entrez la maison d'edition du livre: ", 
+	                                "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+					editeur= formatterStringMajuscules(editeur);
+					Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
+					biblio[compteur]= unLivre;
+					break;
+				case JOptionPane.NO_OPTION:
+					int numSerie= Integer.parseInt(
+								  JOptionPane.showInputDialog(
+								  null, "Entrez le numero de serie du périodique: ",
+								  "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
+					int periodicite= Integer.parseInt(
+							  		 JOptionPane.showInputDialog(
+							         null, "Entrez la periodicite du périodique: ",
+							         "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
+					Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
+					biblio[compteur]= unPeriodique;
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					auteur= JOptionPane.showInputDialog(
+	                        null, "Entrez le nom de l'auteur du CD: ", 
+	                        "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+					auteur= formatterStringMajuscules(auteur);
+					CD unCD= new CD(num,dateEmprunt,titre,auteur);
+					biblio[compteur]= unCD;
+					break;
+			}
+			compteur++;
+			JOptionPane.showMessageDialog(
+		    null, "Ouvrage cree", "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(
+		    null, "Tableau deja complet", "Ajout d'un ouvrage", JOptionPane.ERROR_MESSAGE);
 		}
-		compteur++;
-		JOptionPane.showMessageDialog(
-	    null, "Ouvrage cree", "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	//
