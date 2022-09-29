@@ -3,15 +3,20 @@ import javax.swing.*;
 
 public class BiblioList extends Bibliotheque {
 	
-	static int tailleMax;
-	static int compteur; 
-	static List<Ouvrage> biblio;
+	
+	
+	//
+	
+	private int tailleMax;
+	private int compteur; 
+	private List<Ouvrage> biblio;
 	
 	//
 	
 	BiblioList(List<ArrayList<String>> listeAttributs, int taille) {
-		biblio= new LinkedList<>();
-		tailleMax= taille;
+		this.biblio= new LinkedList<>();
+		this.compteur= 0;
+		this.tailleMax= taille;
 		chargerListe(listeAttributs);
 	}
 	
@@ -20,10 +25,10 @@ public class BiblioList extends Bibliotheque {
 	public int rechercherOuvrage(int num) {
 		int i= 0;
 		int posTrouve= -1;
-		while(i < biblio.size() && posTrouve == -1) {
-			if(biblio.get(i) == null) {
+		while(i < this.biblio.size() && posTrouve == -1) {
+			if(this.biblio.get(i) == null) {
 				i++;
-			}else if(biblio.get(i).num == num) {
+			}else if(this.biblio.get(i).num == num) {
 				posTrouve= i;
 			}else {
 				i++;
@@ -41,8 +46,8 @@ public class BiblioList extends Bibliotheque {
                  JOptionPane.PLAIN_MESSAGE));
 		int posOuvrage= rechercherOuvrage(num);
 		if(posOuvrage != -1) {
-			biblio.remove(posOuvrage);
-			compteur--;
+			this.biblio.remove(posOuvrage);
+			this.compteur--;
 			msg= "Ouvrage supprime";
 		}else {
 			msg= "Ouvrage inexistant";
@@ -52,7 +57,7 @@ public class BiblioList extends Bibliotheque {
 	}
 	
 	public void ajouterOuvrage() {
-		if(biblio.size() < tailleMax) {
+		if(this.biblio.size() < tailleMax) {
 			int num= compteur+1;
 			Date dateEmprunt= null;
 			UIManager.put("OptionPane.cancelButtonText", "Annuler");
@@ -79,7 +84,7 @@ public class BiblioList extends Bibliotheque {
 	                                "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 					editeur= formatterStringMajuscules(editeur);
 					Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
-					biblio.add(unLivre);
+					this.biblio.add(unLivre);
 					break;
 				case JOptionPane.NO_OPTION:
 					int numSerie= Integer.parseInt(
@@ -91,7 +96,7 @@ public class BiblioList extends Bibliotheque {
 							         null, "Entrez la periodicite du périodique: ",
 							         "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
 					Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
-					biblio.add(unPeriodique);
+					this.biblio.add(unPeriodique);
 					break;
 				case JOptionPane.CANCEL_OPTION:
 					auteur= JOptionPane.showInputDialog(
@@ -99,10 +104,10 @@ public class BiblioList extends Bibliotheque {
 	                        "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 					auteur= formatterStringMajuscules(auteur);
 					CD unCD= new CD(num,dateEmprunt,titre,auteur);
-					biblio.add(unCD);
+					this.biblio.add(unCD);
 					break;
 			}
-			compteur++;
+			this.compteur++;
 			JOptionPane.showMessageDialog(
 		    null, "Ouvrage cree", "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 		}else {
@@ -115,8 +120,8 @@ public class BiblioList extends Bibliotheque {
 	
 	@Override
 	public String toString() {
-		String rep= "Nombre d'ouvrages: "+compteur+"\n\n";
-		for(Ouvrage unOuvrage : biblio) {
+		String rep= "Nombre d'ouvrages: "+this.compteur+"\n\n";
+		for(Ouvrage unOuvrage : this.biblio) {
 			if(unOuvrage != null) {
 				rep += unOuvrage.toString()+"\n";
 			}
@@ -127,7 +132,6 @@ public class BiblioList extends Bibliotheque {
 	//
 	
 	private void chargerListe(List<ArrayList<String>> listeAttributs) {
-		compteur= 0;
 		listeAttributs.forEach((donneesOuvrage) -> {
 			char type= donneesOuvrage.get(0).charAt(0);
 			int num= Integer.parseInt(donneesOuvrage.get(1));
@@ -144,18 +148,18 @@ public class BiblioList extends Bibliotheque {
 				String auteur= donneesOuvrage.get(4);
 				String editeur= donneesOuvrage.get(5);
 				Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
-				biblio.add(unLivre);
+				this.biblio.add(unLivre);
 			}else if(type == 'P') {
 				int numSerie= Integer.parseInt(donneesOuvrage.get(4));
 				int periodicite= Integer.parseInt(donneesOuvrage.get(5));
 				Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
-				biblio.add(unPeriodique);
+				this.biblio.add(unPeriodique);
 			}else if(type == 'C') {
 				String auteur= donneesOuvrage.get(4);
 				CD unCD= new CD(num,dateEmprunt,titre,auteur);
-				biblio.add(unCD);
+				this.biblio.add(unCD);
 			}
-			compteur++;
+			this.compteur++;
 		});
 	}
 	
