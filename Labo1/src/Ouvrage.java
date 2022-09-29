@@ -4,6 +4,10 @@ public class Ouvrage {
 	protected int num;
 	
 	//
+	
+	Ouvrage(){
+		
+	}
 
 	Ouvrage(int num, Date dateEmprunt) {
 		this.num= num;
