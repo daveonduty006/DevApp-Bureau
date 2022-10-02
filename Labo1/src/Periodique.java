@@ -1,12 +1,12 @@
 public class Periodique extends Ouvrage {
 	
 	private String titre;
-	private int numSerie, periodicite;
+	private int publication, periodicite;
 	//
 	Periodique(int num, Date dateEmprunt, String titre, int numSerie, int periodicite) {
 		super(num, dateEmprunt);
 		this.titre= titre;
-		this.numSerie= numSerie;
+		this.publication= numSerie;
 		this.periodicite= periodicite;
 	}
 	//
@@ -15,7 +15,7 @@ public class Periodique extends Ouvrage {
 	}
 	
 	public int getNumSerie() {
-		return this.numSerie;
+		return this.publication;
 	}
 	
 	public int getPeriodicite() {
@@ -27,7 +27,7 @@ public class Periodique extends Ouvrage {
 	}
 	
 	public void setNumSerie(int unNumSerie) {
-		this.numSerie= unNumSerie;
+		this.publication= unNumSerie;
 	}
 	
 	public void setPeriodicite(int unePeriodicite) {
@@ -37,7 +37,7 @@ public class Periodique extends Ouvrage {
 	@Override
 	public String toString() {
 		String rep= super.toString();
-		rep= rep+"Titre: "+this.titre+"\n"+"Numero: "+this.numSerie+"\n"+"Periodicite: "+this.periodicite+" semaine(s)\n";
+		rep= rep+"Titre: "+this.titre+"\n"+"Publication: numero "+this.publication+"\n"+"Periodicite: "+this.periodicite+" semaine(s)\n";
 		return rep;
 	}
 

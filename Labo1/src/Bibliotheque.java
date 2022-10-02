@@ -4,7 +4,7 @@ abstract class Bibliotheque {
 	
 	abstract void supprimerOuvrage();
 	
-	abstract int rechercherOuvrage(int num);
+	abstract int rechercherOuvrage(int numRecherche);
 	
 
 	

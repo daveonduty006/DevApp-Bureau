@@ -22,19 +22,23 @@ public class BiblioTab extends Bibliotheque {
 	
 	//
 	
+	public Ouvrage[] getBiblio() {
+		return this.biblio;
+	}
+	
 	public int getTailleMax() {
 		return this.tailleMax;
 	}
 	
 	//
 	
-	public int rechercherOuvrage(int num) {
+	public int rechercherOuvrage(int unNum) {
 		int i= 0;
 		int posTrouve= -1;
 		while(i < this.tailleMax && posTrouve == -1) {
 			if(this.biblio[i] == null) {
 				i++;
-			}else if(this.biblio[i].num == num) {
+			}else if(this.biblio[i].num == unNum) {
 				posTrouve= i;
 			}else {
 				i++;

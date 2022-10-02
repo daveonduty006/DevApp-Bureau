@@ -22,6 +22,16 @@ public class BiblioList extends Bibliotheque {
 	
 	//
 	
+	public List<Ouvrage> getBiblio() {
+		return this.biblio;
+	}
+	
+	public int getTailleMax() {
+		return this.tailleMax;
+	}
+	
+	//
+	
 	public int rechercherOuvrage(int num) {
 		int i= 0;
 		int posTrouve= -1;
