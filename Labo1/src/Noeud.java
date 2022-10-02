@@ -10,16 +10,10 @@ public class Noeud {
 	
 	//
 	
-	Noeud() {
-		this.data= null;
+	Noeud(Object data) {
+		this.data= data;
 		this.suiv= null;
 		this.prec= null;
-	}
-	
-	Noeud(Object data, Noeud suiv, Noeud prec) {
-		this.data= data;
-		this.suiv= suiv;
-		this.prec= prec;
 	}
 	
 	//
@@ -46,15 +40,6 @@ public class Noeud {
 	
 	public void setPrec(Noeud prec) {
 		this.prec= prec;
-	}
-	
-	//
-	
-	@Override
-	public String toString() {
-		String dataSuiv= (this.suiv == null) ? null : this.suiv.getData().toString();
-		String dataPrec= (this.prec == null) ? null : this.prec.getData().toString();
-		return "Node[data= "+this.data+", suiv= "+dataSuiv+", prec= "+dataPrec+"]";
 	}
 	
 }

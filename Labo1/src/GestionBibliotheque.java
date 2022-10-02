@@ -11,6 +11,8 @@ public class GestionBibliotheque {
 		listeAttributs= (ArrayList<ArrayList<String>>) Utilitaires.chargerFichierTexte(FICHIER_TEXTE, ";");
 		//BiblioTab biblioTab= new BiblioTab(listeAttributs, TAILLE_MAX);
 		//BiblioList biblioList= new BiblioList(listeAttributs, TAILLE_MAX);
+		BiblioListPerso biblioListPerso= new BiblioListPerso(listeAttributs, TAILLE_MAX);
+		System.out.println(biblioListPerso);
 		
 	}
 
