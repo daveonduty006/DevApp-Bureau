@@ -1,9 +1,7 @@
 import java.util.*;
+import javax.swing.*;
 
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
-public class BiblioListPerso {
+public class BiblioListPerso extends Bibliotheque {
 	
 	
 	
@@ -12,6 +10,7 @@ public class BiblioListPerso {
 	private int tailleMax;
 	private int compteur; 
 	private ListeChainee biblio;
+	private SortedSet<Integer> cles;
 	
 	//
 	
@@ -39,9 +38,9 @@ public class BiblioListPerso {
         boolean trouve= false;
         while(pointeurTete != null && !trouve) {
             if( ( (Ouvrage) pointeurTete.getData() ).num == num) {
-                trouve = true;
+                trouve= true;
             }else {
-                pointeurTete = pointeurTete.getSuiv();
+                pointeurTete= pointeurTete.getSuiv();
             }
         }
         if(trouve) {
@@ -50,7 +49,7 @@ public class BiblioListPerso {
             return null;
         }
 	}
-	/*
+	
 	public void supprimerOuvrage() {
 		String msg;
 		UIManager.put("OptionPane.cancelButtonText", "Annuler");
@@ -58,11 +57,11 @@ public class BiblioListPerso {
 				 JOptionPane.showInputDialog(
 	             null, "Entrez le numero de l'ouvrage a supprimer: ", "Suppression d'un ouvrage",
                  JOptionPane.PLAIN_MESSAGE));
-		int posOuvrage= rechercherOuvrage(num);
-		Ouvrage unOuvrage= (Ouvrage) this.biblio.obtenir(msg)
-		if(posOuvrage != -1) {
-			this.biblio.retirer(posOuvrage);
+		Ouvrage unOuvrage= rechercherOuvrage(num);
+		if(unOuvrage != null) {
+			this.biblio.retirer(unOuvrage);
 			this.compteur--;
+			cles.remove(num);
 			msg= "Ouvrage supprime";
 		}else {
 			msg= "Ouvrage inexistant";
@@ -70,9 +69,12 @@ public class BiblioListPerso {
 		JOptionPane.showMessageDialog(
 	    null, msg, "Suppression d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 	}
-	*/
+	
 	public void ajouterOuvrage() {
 		if(this.biblio.getTaille() < tailleMax) {
+			while(cles.contains(this.compteur+1)) {
+				this.compteur++;
+			}
 			int num= compteur+1;
 			Date dateEmprunt= null;
 			UIManager.put("OptionPane.cancelButtonText", "Annuler");
@@ -123,6 +125,7 @@ public class BiblioListPerso {
 					break;
 			}
 			this.compteur++;
+			cles.add(num);
 			JOptionPane.showMessageDialog(
 		    null, "Ouvrage cree", "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 		}else {
@@ -134,7 +137,7 @@ public class BiblioListPerso {
 	//
 	
 	public String toString() {
-		String rep= "Nombre d'ouvrages: "+this.compteur+"\n\n";
+		String rep= "Nombre d'ouvrages: "+cles.size()+"\n\n";
         Noeud pointeurTete= this.biblio.getTete(); 
         while(pointeurTete != null) {
             rep+= pointeurTete.getData().toString()+"\n";
@@ -146,6 +149,7 @@ public class BiblioListPerso {
 	//
 	
 	private void chargerListe(List<ArrayList<String>> listeAttributs) {
+		cles= new TreeSet<>();
 		listeAttributs.forEach((donneesOuvrage) -> {
 			char type= donneesOuvrage.get(0).charAt(0);
 			int num= Integer.parseInt(donneesOuvrage.get(1));
@@ -174,6 +178,7 @@ public class BiblioListPerso {
 				this.biblio.ajouter(unCD);
 			}
 			this.compteur++;
+			cles.add(num);
 		});
 	}
 	

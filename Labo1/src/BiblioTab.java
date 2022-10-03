@@ -10,6 +10,7 @@ public class BiblioTab extends Bibliotheque {
 	private int tailleMax;
 	private int compteur;  
 	private Ouvrage biblio[];
+	private SortedSet<Integer> cles;
 	
 	//
 	
@@ -69,6 +70,7 @@ public class BiblioTab extends Bibliotheque {
 				}
 			}
 			this.compteur--;
+			cles.remove(num);
 			msg= "Ouvrage supprime";
 		}else {
 			msg= "Ouvrage inexistant";
@@ -79,6 +81,9 @@ public class BiblioTab extends Bibliotheque {
 	
 	public void ajouterOuvrage() {
 		if(this.biblio[this.tailleMax-1] == null) {
+			while(cles.contains(this.compteur+1)) {
+				this.compteur++;
+			}
 			int num= this.compteur+1;
 			Date dateEmprunt= null;
 			UIManager.put("OptionPane.cancelButtonText", "Annuler");
@@ -129,6 +134,7 @@ public class BiblioTab extends Bibliotheque {
 					break;
 			}
 			this.compteur++;
+			cles.add(num);
 			JOptionPane.showMessageDialog(
 		    null, "Ouvrage cree", "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
 		}else {
@@ -141,7 +147,7 @@ public class BiblioTab extends Bibliotheque {
 	
 	@Override
 	public String toString() {
-		String rep= "Nombre d'ouvrages: "+this.compteur+"\n\n";
+		String rep= "Nombre d'ouvrages: "+cles.size()+"\n\n";
 		for(Ouvrage unOuvrage : this.biblio) {
 			if(unOuvrage != null) {
 				rep += unOuvrage.toString()+"\n";
@@ -153,6 +159,7 @@ public class BiblioTab extends Bibliotheque {
 	//
 	
 	private void chargerTableau(List<ArrayList<String>> listeAttributs) {
+		cles= new TreeSet<>();
 		listeAttributs.forEach((donneesOuvrage) -> {
 			char type= donneesOuvrage.get(0).charAt(0);
 			int num= Integer.parseInt(donneesOuvrage.get(1));
@@ -181,6 +188,7 @@ public class BiblioTab extends Bibliotheque {
 				this.biblio[this.compteur]= unCD;
 			}
 			this.compteur++;
+			cles.add(num);
 		});
 	}
 	
