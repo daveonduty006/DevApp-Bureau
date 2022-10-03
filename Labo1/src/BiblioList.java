@@ -32,19 +32,21 @@ public class BiblioList extends Bibliotheque {
 	
 	//
 	
-	public int rechercherOuvrage(int num) {
+	public Ouvrage rechercherOuvrage(int num) {
 		int i= 0;
 		int posTrouve= -1;
 		while(i < this.biblio.size() && posTrouve == -1) {
-			if(this.biblio.get(i) == null) {
-				i++;
-			}else if(this.biblio.get(i).num == num) {
+			if(this.biblio.get(i).num == num) {
 				posTrouve= i;
 			}else {
 				i++;
 			}
 		}
-		return posTrouve;
+		if(posTrouve != -1) {
+			return this.biblio.get(posTrouve);
+		}else {
+			return null;
+		}
 	}
 	
 	public void supprimerOuvrage() {
@@ -54,9 +56,9 @@ public class BiblioList extends Bibliotheque {
 				 JOptionPane.showInputDialog(
 	             null, "Entrez le numero de l'ouvrage a supprimer: ", "Suppression d'un ouvrage",
                  JOptionPane.PLAIN_MESSAGE));
-		int posOuvrage= rechercherOuvrage(num);
-		if(posOuvrage != -1) {
-			this.biblio.remove(posOuvrage);
+		Ouvrage unOuvrage= rechercherOuvrage(num);
+		if(unOuvrage != null) {
+			this.biblio.remove(unOuvrage);
 			this.compteur--;
 			msg= "Ouvrage supprime";
 		}else {
@@ -99,11 +101,11 @@ public class BiblioList extends Bibliotheque {
 				case JOptionPane.NO_OPTION:
 					int numSerie= Integer.parseInt(
 								  JOptionPane.showInputDialog(
-								  null, "Entrez le numero de serie du périodique: ",
+								  null, "Entrez le numero de publication du periodique: ",
 								  "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
 					int periodicite= Integer.parseInt(
 							  		 JOptionPane.showInputDialog(
-							         null, "Entrez la periodicite du périodique: ",
+							         null, "Entrez la periodicite du periodique: ",
 							         "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
 					Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
 					this.biblio.add(unPeriodique);

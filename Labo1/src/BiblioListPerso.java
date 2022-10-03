@@ -1,5 +1,8 @@
 import java.util.*;
 
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+
 public class BiblioListPerso {
 	
 	
@@ -31,7 +34,102 @@ public class BiblioListPerso {
 	
 	//
 	
-	
+	public Ouvrage rechercherOuvrage(int num) {
+        Noeud pointeurTete= this.biblio.getTete();
+        boolean trouve= false;
+        while(pointeurTete != null && !trouve) {
+            if( ( (Ouvrage) pointeurTete.getData() ).num == num) {
+                trouve = true;
+            }else {
+                pointeurTete = pointeurTete.getSuiv();
+            }
+        }
+        if(trouve) {
+            return (Ouvrage) pointeurTete.getData();
+        }else {
+            return null;
+        }
+	}
+	/*
+	public void supprimerOuvrage() {
+		String msg;
+		UIManager.put("OptionPane.cancelButtonText", "Annuler");
+		int num= Integer.parseInt(
+				 JOptionPane.showInputDialog(
+	             null, "Entrez le numero de l'ouvrage a supprimer: ", "Suppression d'un ouvrage",
+                 JOptionPane.PLAIN_MESSAGE));
+		int posOuvrage= rechercherOuvrage(num);
+		Ouvrage unOuvrage= (Ouvrage) this.biblio.obtenir(msg)
+		if(posOuvrage != -1) {
+			this.biblio.retirer(posOuvrage);
+			this.compteur--;
+			msg= "Ouvrage supprime";
+		}else {
+			msg= "Ouvrage inexistant";
+		}
+		JOptionPane.showMessageDialog(
+	    null, msg, "Suppression d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+	}
+	*/
+	public void ajouterOuvrage() {
+		if(this.biblio.getTaille() < tailleMax) {
+			int num= compteur+1;
+			Date dateEmprunt= null;
+			UIManager.put("OptionPane.cancelButtonText", "Annuler");
+			String titre= JOptionPane.showInputDialog(
+	                      null, "Entrez le titre du nouvel ouvrage: ", "Ajout d'un ouvrage",
+	                      JOptionPane.PLAIN_MESSAGE);
+			titre= formatterStringMajuscules(titre);
+			UIManager.put("OptionPane.cancelButtonText", "CD");
+			UIManager.put("OptionPane.noButtonText", "Periodique");
+			UIManager.put("OptionPane.yesButtonText", "Livre");
+			int rep= JOptionPane.showConfirmDialog(
+					 null, "Choisissez le type du nouvel ouvrage", "Ajout d'un ouvrage", 
+					 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			UIManager.put("OptionPane.cancelButtonText", "Annuler");
+			String auteur;
+			switch(rep) {
+				case JOptionPane.YES_OPTION:
+				    auteur= JOptionPane.showInputDialog(
+		                    null, "Entrez le nom de l'auteur du livre: ", 
+		                    "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+					auteur= formatterStringMajuscules(auteur);
+					String editeur= JOptionPane.showInputDialog(
+	                                null, "Entrez la maison d'edition du livre: ", 
+	                                "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+					editeur= formatterStringMajuscules(editeur);
+					Livre unLivre= new Livre(num,dateEmprunt,titre,auteur,editeur);
+					this.biblio.ajouter(unLivre);
+					break;
+				case JOptionPane.NO_OPTION:
+					int numSerie= Integer.parseInt(
+								  JOptionPane.showInputDialog(
+								  null, "Entrez le numero de serie du périodique: ",
+								  "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
+					int periodicite= Integer.parseInt(
+							  		 JOptionPane.showInputDialog(
+							         null, "Entrez la periodicite du périodique: ",
+							         "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE));
+					Periodique unPeriodique= new Periodique(num,dateEmprunt,titre,numSerie,periodicite);
+					this.biblio.ajouter(unPeriodique);
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					auteur= JOptionPane.showInputDialog(
+	                        null, "Entrez le nom de l'auteur du CD: ", 
+	                        "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+					auteur= formatterStringMajuscules(auteur);
+					CD unCD= new CD(num,dateEmprunt,titre,auteur);
+					this.biblio.ajouter(unCD);
+					break;
+			}
+			this.compteur++;
+			JOptionPane.showMessageDialog(
+		    null, "Ouvrage cree", "Ajout d'un ouvrage", JOptionPane.PLAIN_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(
+		    null, "Capacite maximale de la liste atteinte", "Ajout d'un ouvrage", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 	
 	//
 	
@@ -79,7 +177,23 @@ public class BiblioListPerso {
 		});
 	}
 	
+	private String formatterStringMajuscules(String str) {
+		String strFormatte= "";
+		for(String mot : str.split(" ")) {
+			String motSansMajuscules= "";
+			for(char c : mot.toCharArray()) {
+				if(Character.isLetter(c)) {
+					motSansMajuscules+= Character.toLowerCase(c);
+				}else {
+					motSansMajuscules+= c;
+				}
+			}
+			if(Character.isLetter(motSansMajuscules.charAt(0))){
+				mot= motSansMajuscules.substring(0,1).toUpperCase() + motSansMajuscules.substring(1);
+			}
+			strFormatte+= mot+" ";
+		}		
+		return strFormatte;
+	}
 	
-	
-
 }

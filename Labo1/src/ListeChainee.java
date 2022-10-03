@@ -35,7 +35,7 @@ public class ListeChainee {
 	
 	public Noeud obtenir(Object obj) {
 		Noeud pointeurTete= this.tete;
-        while(pointeurTete != null) {
+        while(pointeurTete.getData() != null) {
             if(pointeurTete.getData() == obj) {
                 return pointeurTete; // Pour sortir de la boucle
             }else {
@@ -45,14 +45,14 @@ public class ListeChainee {
         return pointeurTete;
 	}
 	
-    public void supprimer(Object obj) {
+    public void retirer(Object obj) {
         Noeud noeudObj = obtenir(obj);
-        if(noeudObj == null){
+        if(noeudObj == null) {
             System.out.println("Noeud vide");
-        }else if(noeudObj == this.tete){ // Cas si on supprime le premier noeud
+        }else if(noeudObj == this.tete) { // Cas si on supprime le premier noeud
         	noeudObj.getSuiv().setPrec(noeudObj.getSuiv());
             this.tete= this.tete.getSuiv();
-        }else if(noeudObj == this.queue){ // Cas où on supprime le dernier noeud
+        }else if(noeudObj == this.queue) { // Cas où on supprime le dernier noeud
             noeudObj.getPrec().setSuiv(noeudObj.getSuiv());
             this.queue= this.queue.getPrec();
         }else { // Cas où on supprime un élément autre que le premier ou dernier noeud
