@@ -9,9 +9,6 @@ public class GestionBibliotheque {
 	
 	public static void main(String[] args) throws Exception {
 		listeAttributs= (ArrayList<ArrayList<String>>) Utilitaires.chargerFichierTexte(FICHIER_TEXTE, ";");
-		//BiblioTab biblioTab= new BiblioTab(listeAttributs, TAILLE_MAX);
-		//BiblioList biblioList= new BiblioList(listeAttributs, TAILLE_MAX);
-		//BiblioListPerso biblioListPerso= new BiblioListPerso(listeAttributs, TAILLE_MAX);
 		String choixStructure, choixTest;
 		do {
 			String msg= "1. Instancier la bibliotheque sous forme de BiblioTab\n"+
