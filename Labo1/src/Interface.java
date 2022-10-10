@@ -19,13 +19,14 @@ public class Interface extends JFrame implements ActionListener{
     static String cheminFichierTxt;
     static Map<Integer,Object[]> tableIndex;
     static int compteurEnregEffaces;
-    static JComboBox<String> comboBoxCateg;
+    static JComboBox<String> comboBoxCategs;
     static JComboBox<Integer> comboBoxAuteurs;
     static JComboBox<Integer> comboBoxLivres;
     static JButton btnRecharger;
     static JButton btnLister;
     static JButton btnModifier;
     static JButton btnSupprimer;
+    static int numLivreChoisi;
   
     Interface() throws Exception {
 
@@ -69,10 +70,10 @@ public class Interface extends JFrame implements ActionListener{
     	sp.setBounds(10, 53, 821, 475);
     	this.getContentPane().add(sp);
     	
-    	comboBoxCateg = new JComboBox<>();
-    	comboBoxCateg.setBounds(668, 568, 163, 36);
-    	comboBoxCateg.addActionListener(this);
-    	this.getContentPane().add(comboBoxCateg);
+    	comboBoxCategs = new JComboBox<>();
+    	comboBoxCategs.setBounds(668, 568, 163, 36);
+    	comboBoxCategs.addActionListener(this);
+    	this.getContentPane().add(comboBoxCategs);
     	
     	JLabel lbl3 = new JLabel("CATÉGORIES DES LIVRES");
     	lbl3.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -98,14 +99,14 @@ public class Interface extends JFrame implements ActionListener{
     	
     	btnModifier = new JButton("Modifier");
     	btnModifier.setFont(new Font("Tahoma", Font.BOLD, 11));
-    	btnModifier.setEnabled(false);
     	btnModifier.setBounds(227, 552, 113, 26);
+    	btnModifier.addActionListener(this);
     	this.getContentPane().add(btnModifier);
     	
     	btnSupprimer = new JButton("Supprimer");
     	btnSupprimer.setFont(new Font("Tahoma", Font.BOLD, 11));
-    	btnSupprimer.setEnabled(false);
     	btnSupprimer.setBounds(227, 594, 113, 26);
+    	btnSupprimer.addActionListener(this);
     	this.getContentPane().add(btnSupprimer);
     	
     	JLabel lbl1 = new JLabel("LIVRES DE LA BIBLIOTHÈQUE");
@@ -116,6 +117,84 @@ public class Interface extends JFrame implements ActionListener{
     	
     	this.setVisible(true);
     	obtenirFichierBinaire(0);
+    }
+    
+    public void modifierTitre(int livreChoisi) throws IOException {
+        tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
+    	long addresse= (long) tableIndex.get(livreChoisi)[0];
+    	String nouveauTitre= JOptionPane.showInputDialog(null, "Entrez le nouveau titre: ");
+    	int tailleNouveauTitre= nouveauTitre.getBytes().length;
+    	//
+    	tmpWriteBin.seek(addresse);
+    	tmpWriteBin.readInt();
+    	long addresseTitre= tmpWriteBin.getFilePointer();
+    	String ancienTitre= tmpWriteBin.readUTF();
+    	int tailleAncienTitre= ancienTitre.getBytes().length;
+    	tmpWriteBin.seek(addresseTitre);
+    	//
+    	if(tailleNouveauTitre == tailleAncienTitre) {
+    		tmpWriteBin.writeUTF(nouveauTitre);
+    	}else if(tailleNouveauTitre < tailleAncienTitre) {
+    		while(tailleNouveauTitre < tailleAncienTitre) {
+    			nouveauTitre += (char)0;
+    	    	tailleNouveauTitre= nouveauTitre.getBytes().length;
+    		}
+    		tmpWriteBin.writeUTF(nouveauTitre);
+    	}else {
+    		JOptionPane.showMessageDialog(null, "Nouveau titre trop grand. Veuillez raccourcir le nouveau titre svp");
+    		modifierTitre(livreChoisi);
+    	}
+        tmpWriteBin.close();
+    	
+    	
+    }
+    
+    public void listerAuteurChoisi(int auteurChoisi) throws IOException {
+        tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
+    	int num, numAuteur, annee, pages;
+    	String titre, categorie;
+        try {
+    		while(true) {
+    	    	num= tmpWriteBin.readInt();
+    	    	titre= tmpWriteBin.readUTF();
+    	    	numAuteur= tmpWriteBin.readInt();
+    	    	annee= tmpWriteBin.readInt();
+    	    	pages= tmpWriteBin.readInt();
+    	    	categorie= tmpWriteBin.readUTF();
+    	    	if(numAuteur == auteurChoisi) {
+    	        	Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
+  		                  String.valueOf(pages), categorie};
+    	        	model.addRow(rangee);
+    	    	}
+    		}
+        }catch(Exception e) {
+        	//
+        }        
+        tmpWriteBin.close();
+    }
+    
+    public void listerCategChoisie(String categChoisie) throws IOException {
+        tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
+    	int num, numAuteur, annee, pages;
+    	String titre, categorie;
+        try {
+    		while(true) {
+    	    	num= tmpWriteBin.readInt();
+    	    	titre= tmpWriteBin.readUTF();
+    	    	numAuteur= tmpWriteBin.readInt();
+    	    	annee= tmpWriteBin.readInt();
+    	    	pages= tmpWriteBin.readInt();
+    	    	categorie= tmpWriteBin.readUTF();
+    	    	if(categChoisie.equals(categorie)) {
+    	        	Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
+  		                  String.valueOf(pages), categorie};
+    	        	model.addRow(rangee);
+    	    	}
+    		}
+        }catch(Exception e) {
+        	//
+        }        
+        tmpWriteBin.close(); 
     }
     
     public void listerLivreChoisi(int livreChoisi) throws IOException {
@@ -164,7 +243,7 @@ public class Interface extends JFrame implements ActionListener{
 	
 	private void chargerComboBoxCategs(Set<String> tabCategs) {
 		for(String categ : tabCategs) {
-			comboBoxCateg.addItem(categ);
+			comboBoxCategs.addItem(categ);
 		}
 	}
 	
@@ -187,7 +266,7 @@ public class Interface extends JFrame implements ActionListener{
                 	tmpReadTxt= new BufferedReader(new FileReader(cheminFichierTxt));
                     ecrireFichierBinaire();
             	}else {
-            		JOptionPane.showMessageDialog(null, "Veuillez recharger le fichier livres.txt svp");
+            		JOptionPane.showMessageDialog(null, "Veuillez charger le fichier livres.txt svp");
             	}
             }
         }
@@ -248,6 +327,8 @@ public class Interface extends JFrame implements ActionListener{
 			}
 		}
 		if(e.getSource() == btnLister) {
+			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		    dtm.setNumRows(0);
 			try {
 				listerLivres();
 			}catch(IOException e1) {
@@ -255,11 +336,38 @@ public class Interface extends JFrame implements ActionListener{
 			}
 		}
 		if(e.getSource() == comboBoxLivres) {
-			int numLivreChoisi= (Integer) comboBoxLivres.getSelectedItem();
+			numLivreChoisi= (Integer) comboBoxLivres.getSelectedItem();
+			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		    dtm.setNumRows(0);
+			try {
+				listerLivreChoisi(numLivreChoisi);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if(e.getSource() == comboBoxCategs) {
+			String categChoisi= (String) comboBoxCategs.getSelectedItem();
 			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 		    dtm.setNumRows(0);
 		    try {
-				listerLivreChoisi(numLivreChoisi);
+				listerCategChoisie(categChoisi);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if(e.getSource() == comboBoxAuteurs) {
+			int auteurChoisi= (Integer) comboBoxAuteurs.getSelectedItem();
+			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		    dtm.setNumRows(0);
+		    try {
+				listerAuteurChoisi(auteurChoisi);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if(e.getSource() == btnModifier) {
+			try {
+				modifierTitre(numLivreChoisi);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
