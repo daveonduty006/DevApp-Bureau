@@ -38,7 +38,7 @@ public class Interface extends JFrame implements ActionListener{
     	this.getContentPane().setLayout(null);
     	this.setLocationRelativeTo(null);
     	
-    	btnRecharger= new JButton("RECHARGER LES LIVRES");
+    	btnRecharger= new JButton("RECHARGER LIVRES.TXT");
     	btnRecharger.setFont(new Font("Tahoma", Font.BOLD, 12));
     	btnRecharger.setFocusable(false);
     	btnRecharger.addActionListener(this);
@@ -123,6 +123,7 @@ public class Interface extends JFrame implements ActionListener{
     public void supprimerLivre(int livreChoisi) {
     	tableIndex.get(livreChoisi)[1]= 0;
     	comboBoxLivres.removeItem(livreChoisi);
+    	compteurEnregEffaces++;
     	JOptionPane.showMessageDialog(null, "Livre #"+livreChoisi+" supprime");  	
     }
     
@@ -133,7 +134,7 @@ public class Interface extends JFrame implements ActionListener{
         	tmpWriteBin.seek(addresse);
         	int num= tmpWriteBin.readInt();
         	String ancienTitre= tmpWriteBin.readUTF();
-        	int tailleAncienTitre= ancienTitre.getBytes(StandardCharsets.UTF_8).length + 2;
+        	int tailleAncienTitre= ancienTitre.getBytes(StandardCharsets.UTF_8).length;
         	int numAuteur= tmpWriteBin.readInt();
         	int annee= tmpWriteBin.readInt();
         	int pages= tmpWriteBin.readInt();
