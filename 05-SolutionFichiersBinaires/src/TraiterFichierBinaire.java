@@ -7,8 +7,10 @@ public class TraiterFichierBinaire {
     static BufferedReader clavier;
     static File fichierBin;
 
-    // 4 octets pour numéro du film, 20 octets pour le titre,
-    // 12 octets pour la catégorie et 4 octets pour la durée. 
+    // 4 octets pour numéro du film, 
+    // 20 octets pour le titre,
+    // 12 octets pour la catégorie,
+    // 4 octets pour la durée. 
     // Le système ajoute au début de chaque string 2 octets '\\u'
     // pour indiquer l'encodage (UTF). Comme nous avons 2 strings
     // alors faudra ajouter à la taille de l'enregistrement 4 octets de plus.

@@ -1,5 +1,6 @@
 import java.awt.event.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -122,77 +123,68 @@ public class Interface extends JFrame implements ActionListener{
     public void modifierTitre(int livreChoisi) throws IOException {
         tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
     	long addresse= (long) tableIndex.get(livreChoisi)[0];
-    	String nouveauTitre= JOptionPane.showInputDialog(null, "Entrez le nouveau titre: ");
-    	int tailleNouveauTitre= nouveauTitre.getBytes().length;
+    	tmpWriteBin.seek(addresse);
+    	int num= tmpWriteBin.readInt();
+    	String ancienTitre= tmpWriteBin.readUTF();
+    	int tailleAncienTitre= ancienTitre.getBytes(StandardCharsets.UTF_8).length + 2;
+    	int numAuteur= tmpWriteBin.readInt();
+    	int annee= tmpWriteBin.readInt();
+    	int pages= tmpWriteBin.readInt();
+    	String categorie= tmpWriteBin.readUTF();
+    	//
+    	String nouveauTitre= JOptionPane.showInputDialog(null, "Entrez le nouveau titre");
+    	nouveauTitre= formaterString(nouveauTitre, tailleAncienTitre); 
     	//
     	tmpWriteBin.seek(addresse);
-    	tmpWriteBin.readInt();
-    	long addresseTitre= tmpWriteBin.getFilePointer();
-    	String ancienTitre= tmpWriteBin.readUTF();
-    	int tailleAncienTitre= ancienTitre.getBytes().length;
-    	tmpWriteBin.seek(addresseTitre);
-    	//
-    	if(tailleNouveauTitre == tailleAncienTitre) {
-    		tmpWriteBin.writeUTF(nouveauTitre);
-    	}else if(tailleNouveauTitre < tailleAncienTitre) {
-    		while(tailleNouveauTitre < tailleAncienTitre) {
-    			nouveauTitre += (char)0;
-    	    	tailleNouveauTitre= nouveauTitre.getBytes().length;
-    		}
-    		tmpWriteBin.writeUTF(nouveauTitre);
-    	}else {
-    		JOptionPane.showMessageDialog(null, "Nouveau titre trop grand. Veuillez raccourcir le nouveau titre svp");
-    		modifierTitre(livreChoisi);
-    	}
-        tmpWriteBin.close();
-    	
-    	
+        tmpWriteBin.writeInt(num);
+        tmpWriteBin.writeUTF(nouveauTitre);
+        tmpWriteBin.writeInt(numAuteur);
+        tmpWriteBin.writeInt(annee);
+        tmpWriteBin.writeInt(pages);
+        tmpWriteBin.writeUTF(categorie);
+        tmpWriteBin.close();  	
     }
     
     public void listerAuteurChoisi(int auteurChoisi) throws IOException {
         tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
     	int num, numAuteur, annee, pages;
     	String titre, categorie;
-        try {
-    		while(true) {
-    	    	num= tmpWriteBin.readInt();
-    	    	titre= tmpWriteBin.readUTF();
-    	    	numAuteur= tmpWriteBin.readInt();
-    	    	annee= tmpWriteBin.readInt();
-    	    	pages= tmpWriteBin.readInt();
-    	    	categorie= tmpWriteBin.readUTF();
-    	    	if(numAuteur == auteurChoisi) {
-    	        	Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
-  		                  String.valueOf(pages), categorie};
-    	        	model.addRow(rangee);
-    	    	}
-    		}
-        }catch(Exception e) {
-        	//
+        for(Integer numLivre : tableIndex.keySet()) {
+        	long addresse = (long) tableIndex.get(numLivre)[0];
+        	tmpWriteBin.seek(addresse);
+    	    num= tmpWriteBin.readInt();
+    	    titre= tmpWriteBin.readUTF();
+    	    numAuteur= tmpWriteBin.readInt();
+    	    annee= tmpWriteBin.readInt();
+    	    pages= tmpWriteBin.readInt();
+    	    categorie= tmpWriteBin.readUTF();
+    	    if(numAuteur == auteurChoisi) {
+    	        Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
+  		                          String.valueOf(pages), categorie};
+    	        model.addRow(rangee);
+    	    }
         }        
-        tmpWriteBin.close();
+        tmpWriteBin.close(); 
     }
     
     public void listerCategChoisie(String categChoisie) throws IOException {
         tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
     	int num, numAuteur, annee, pages;
     	String titre, categorie;
-        try {
-    		while(true) {
-    	    	num= tmpWriteBin.readInt();
-    	    	titre= tmpWriteBin.readUTF();
-    	    	numAuteur= tmpWriteBin.readInt();
-    	    	annee= tmpWriteBin.readInt();
-    	    	pages= tmpWriteBin.readInt();
-    	    	categorie= tmpWriteBin.readUTF();
-    	    	if(categChoisie.equals(categorie)) {
-    	        	Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
-  		                  String.valueOf(pages), categorie};
-    	        	model.addRow(rangee);
-    	    	}
-    		}
-        }catch(Exception e) {
-        	//
+        for(Integer numLivre : tableIndex.keySet()) {
+        	long addresse = (long) tableIndex.get(numLivre)[0];
+        	tmpWriteBin.seek(addresse);
+    	    num= tmpWriteBin.readInt();
+    	    titre= tmpWriteBin.readUTF();
+    	    numAuteur= tmpWriteBin.readInt();
+    	    annee= tmpWriteBin.readInt();
+    	    pages= tmpWriteBin.readInt();
+    	    categorie= tmpWriteBin.readUTF();
+    	    if(categChoisie.equals(categorie)) {
+    	        Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
+  		                          String.valueOf(pages), categorie};
+    	        model.addRow(rangee);
+    	    }
         }        
         tmpWriteBin.close(); 
     }
@@ -217,23 +209,30 @@ public class Interface extends JFrame implements ActionListener{
     	int num, numAuteur, annee, pages;
     	String titre, categorie;
         tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
-        try { 
-        	while(true) {
-	        	num= tmpWriteBin.readInt();
-	        	titre= tmpWriteBin.readUTF();
-	        	numAuteur= tmpWriteBin.readInt();
-	        	annee= tmpWriteBin.readInt();
-	        	pages= tmpWriteBin.readInt();
-	        	categorie= tmpWriteBin.readUTF();
-	        	Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
-	        			          String.valueOf(pages), categorie};
-	        	model.addRow(rangee);
-        	}
-        }catch(Exception e) {
-        	//
+        for(Integer numLivre : tableIndex.keySet()) {
+        	long addresse = (long) tableIndex.get(numLivre)[0];
+        	tmpWriteBin.seek(addresse);
+    	    num= tmpWriteBin.readInt();
+    	    titre= tmpWriteBin.readUTF();
+    	    numAuteur= tmpWriteBin.readInt();
+    	    annee= tmpWriteBin.readInt();
+    	    pages= tmpWriteBin.readInt();
+    	    categorie= tmpWriteBin.readUTF();
+    	    Object[] rangee= {String.valueOf(num), titre, String.valueOf(numAuteur), String.valueOf(annee), 
+    	        			  String.valueOf(pages), categorie};
+    	    model.addRow(rangee);
         }        
         tmpWriteBin.close();      
     }
+	
+    private static String formaterString(String nouveauString, int tailleAncienString) {
+		if(nouveauString.length() < tailleAncienString) {
+			nouveauString= String.format("%-"+tailleAncienString+"s", nouveauString);
+		}else if(nouveauString.length() > tailleAncienString) {
+			nouveauString= nouveauString.substring(0,tailleAncienString);
+		}
+		return nouveauString;
+	}
 	
 	private void chargerComboBoxLivres(Set<Integer> tabNumLivres) {
 		for(Integer numLivre : tabNumLivres) {
