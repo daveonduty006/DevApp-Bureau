@@ -20,6 +20,8 @@ public class Interface extends JFrame implements ActionListener{
     static String cheminFichierTxt;
     static Map<Integer,Object[]> tableIndex;
     static Set<Integer> tabNumLivres;
+    static Set<Integer> tabAuteurs;
+    static Set<String> tabCategs;
     static int compteurEnregEffaces;
     static JComboBox<String> comboBoxCategs;
     static JComboBox<Integer> comboBoxAuteurs;
@@ -33,6 +35,7 @@ public class Interface extends JFrame implements ActionListener{
   
     Interface() throws Exception {
 
+    	this.setTitle("Laboratoire 1");
     	this.getContentPane().setBackground(Color.GRAY);
     	this.getContentPane().setForeground(Color.white);
     	this.setBounds(100,100,857,710);
@@ -130,9 +133,70 @@ public class Interface extends JFrame implements ActionListener{
     	obtenirFichierBinaire(0);
     }
     
+    public void ajouterLivre(Object[] nouveauLivre) throws IOException {
+        tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
+    	int num= (Integer) nouveauLivre[0];
+    	String titre= (String) nouveauLivre[1];
+    	int numAuteur= (Integer) nouveauLivre[2];
+    	int annee= (Integer) nouveauLivre[3];
+    	int pages= (Integer) nouveauLivre[4];
+    	String categorie= (String) nouveauLivre[5];
+    	int tailleEnreg= 4+(titre.getBytes(StandardCharsets.UTF_8).length)+4+4+
+    			         4+(categorie.getBytes(StandardCharsets.UTF_8).length);
+    	long addresse= 0;
+    	if(compteurEnregEffaces != 0) {
+            for(Integer numLivre : tableIndex.keySet()) {
+            	if( ( (Integer) tableIndex.get(numLivre)[1]) != 0) {
+            		if( ( (Long) tableIndex.get(numLivre)[2]) <= tailleEnreg) {
+                    	addresse = (long) tableIndex.get(numLivre)[0];
+                    	tmpWriteBin.seek(addresse);
+                    	tmpWriteBin.writeInt(num);
+                    	long adrAncienAttribut= tmpWriteBin.getFilePointer();
+                    	String ancienAttribut= tmpWriteBin.readUTF();
+                    	int tailleAncienAttribut= ancienAttribut.getBytes(StandardCharsets.UTF_8).length;
+                    	titre= formaterString(titre, tailleAncienAttribut); 
+                    	tmpWriteBin.seek(adrAncienAttribut);
+                    	tmpWriteBin.writeUTF(titre);
+                    	tmpWriteBin.writeInt(numAuteur);
+                    	tmpWriteBin.writeInt(annee);
+                    	tmpWriteBin.writeInt(pages);
+                    	adrAncienAttribut= tmpWriteBin.getFilePointer();
+                    	ancienAttribut= tmpWriteBin.readUTF();
+                    	tailleAncienAttribut= ancienAttribut.getBytes(StandardCharsets.UTF_8).length;
+                    	categorie= formaterString(categorie, tailleAncienAttribut);
+                    	tmpWriteBin.seek(adrAncienAttribut);
+                    	tmpWriteBin.writeUTF(categorie);  
+                    	compteurEnregEffaces--;
+                    	break;
+            		}
+            	}
+            }          
+    	}else {
+            addresse= tmpWriteBin.length();
+            tmpWriteBin.seek(addresse);
+        	tmpWriteBin.writeInt(num);
+        	tmpWriteBin.writeUTF(titre);
+        	tmpWriteBin.writeInt(numAuteur);
+        	tmpWriteBin.writeInt(annee);
+        	tmpWriteBin.writeInt(pages);
+        	tmpWriteBin.writeUTF(categorie);
+    	}
+    	Object[] mapValeur= {addresse,1,tmpWriteBin.getFilePointer()-addresse};
+    	tableIndex.put(num, mapValeur);
+    	tabNumLivres.add(num);
+    	chargerComboBoxLivres(tabNumLivres);
+    	tabAuteurs.add(numAuteur);
+    	chargerComboBoxAuteurs(tabAuteurs);
+    	tabCategs.add(categorie);
+    	chargerComboBoxCategs(tabCategs);
+		JOptionPane.showMessageDialog(null, "Livre #"+num+" cree");
+        tmpWriteBin.close();  
+    }
+    
     public void supprimerLivre(int livreChoisi) {
     	tableIndex.get(livreChoisi)[1]= 0;
     	comboBoxLivres.removeItem(livreChoisi);
+    	tabNumLivres.remove(livreChoisi);
     	compteurEnregEffaces++;
     	JOptionPane.showMessageDialog(null, "Livre #"+livreChoisi+" supprime");  	
     }
@@ -263,21 +327,27 @@ public class Interface extends JFrame implements ActionListener{
 	}
 	
 	private void chargerComboBoxLivres(Set<Integer> tabNumLivres) {
+		comboBoxLivres.removeAllItems();
 		for(Integer numLivre : tabNumLivres) {
 			comboBoxLivres.addItem(numLivre);
 		}
+		comboBoxLivres.setSelectedIndex(-1);
 	}
 	
 	private void chargerComboBoxCategs(Set<String> tabCategs) {
+		comboBoxCategs.removeAllItems();
 		for(String categ : tabCategs) {
 			comboBoxCategs.addItem(categ);
 		}
+		comboBoxCategs.setSelectedIndex(-1);
 	}
 	
 	private void chargerComboBoxAuteurs(Set<Integer> tabAuteurs) {
+		comboBoxAuteurs.removeAllItems();
 		for(Integer numAuteur : tabAuteurs) {
 			comboBoxAuteurs.addItem(numAuteur);
 		}
+		comboBoxAuteurs.setSelectedIndex(-1);
 	}
 	
 	private void obtenirFichierBinaire(int btnRechargerPresse) throws Exception {
@@ -302,8 +372,8 @@ public class Interface extends JFrame implements ActionListener{
 	private void ecrireFichierBinaire() throws Exception {
 		tableIndex= new TreeMap<>();
 		tabNumLivres= new TreeSet<>();
-		Set<String> tabCategs= new TreeSet<>();
-		Set<Integer> tabAuteurs= new TreeSet<>();
+		tabAuteurs= new TreeSet<>();
+		tabCategs= new TreeSet<>();
         String elems[]= new String[6];
         int num, numAuteur, annee, pages;
         String titre, categorie;
@@ -363,10 +433,18 @@ public class Interface extends JFrame implements ActionListener{
 			}
 		}
 		if(e.getSource() == btnAjouter) {
-			String strData= "";
 			FormulaireNouveauLivre form= new FormulaireNouveauLivre(this, "Ajout d'un Livre", tabNumLivres);
-			form.setModal(true);
+			form.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 			form.setVisible(true);
+			if(form.getNumLivre() != 0) {
+				Object[] nouveauLivre= {form.getNumLivre(), form.getTitre(), form.getNumAuteur(),
+										form.getAnnee(), form.getPages(), form.getCategorie()};
+				try {
+					ajouterLivre(nouveauLivre);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 		if(e.getSource() == comboBoxLivres) {
 			numLivreChoisi= (Integer) comboBoxLivres.getSelectedItem();
