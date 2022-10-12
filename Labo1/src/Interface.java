@@ -19,6 +19,7 @@ public class Interface extends JFrame implements ActionListener{
     static RandomAccessFile tmpWriteBin;
     static String cheminFichierTxt;
     static Map<Integer,Object[]> tableIndex;
+    static Set<Integer> tabNumLivres;
     static int compteurEnregEffaces;
     static JComboBox<String> comboBoxCategs;
     static JComboBox<Integer> comboBoxAuteurs;
@@ -27,6 +28,7 @@ public class Interface extends JFrame implements ActionListener{
     static JButton btnLister;
     static JButton btnModifier;
     static JButton btnSupprimer;
+    static JButton btnAjouter;
     static int numLivreChoisi;
   
     Interface() throws Exception {
@@ -46,15 +48,23 @@ public class Interface extends JFrame implements ActionListener{
     	btnLister.setFont(new Font("Tahoma", Font.BOLD, 12));
     	btnLister.setFocusable(false);
     	btnLister.addActionListener(this);
+    	btnAjouter= new JButton("AJOUTER UN LIVRE");
+    	btnAjouter.setFont(new Font("Tahoma", Font.BOLD, 12));
+    	btnAjouter.setFocusable(false);
+    	btnAjouter.addActionListener(this);
     	
     	JToolBar toolBar = new JToolBar();
     	toolBar.setFloatable(false);
     	toolBar.setBounds(10, 11, 821, 31);
+    	toolBar.addSeparator(new Dimension(15,10));
     	toolBar.add(btnRecharger);
-    	toolBar.addSeparator(new Dimension(100,10));
+    	toolBar.addSeparator(new Dimension(65,10));
     	toolBar.add(btnLister);
-    	toolBar.addSeparator(new Dimension(100,10));
-    	JLabel lblLaboratoire = new JLabel("                                    LABORATOIRE 1");
+    	toolBar.addSeparator(new Dimension(65,10));
+    	toolBar.add(btnAjouter);
+    	toolBar.addSeparator(new Dimension(65,10));
+    	
+    	JLabel lblLaboratoire = new JLabel("LABORATOIRE 1");
     	lblLaboratoire.setFont(new Font("Tahoma", Font.BOLD, 15));
     	toolBar.add(lblLaboratoire);
     	toolBar.setRollover(true);
@@ -291,7 +301,7 @@ public class Interface extends JFrame implements ActionListener{
 	
 	private void ecrireFichierBinaire() throws Exception {
 		tableIndex= new TreeMap<>();
-		Set<Integer> tabNumLivres= new TreeSet<>();
+		tabNumLivres= new TreeSet<>();
 		Set<String> tabCategs= new TreeSet<>();
 		Set<Integer> tabAuteurs= new TreeSet<>();
         String elems[]= new String[6];
@@ -351,6 +361,12 @@ public class Interface extends JFrame implements ActionListener{
 			}catch(IOException e1) {
 				e1.printStackTrace();
 			}
+		}
+		if(e.getSource() == btnAjouter) {
+			String strData= "";
+			FormulaireNouveauLivre form= new FormulaireNouveauLivre(this, "Ajout d'un Livre", tabNumLivres);
+			form.setModal(true);
+			form.setVisible(true);
 		}
 		if(e.getSource() == comboBoxLivres) {
 			numLivreChoisi= (Integer) comboBoxLivres.getSelectedItem();
