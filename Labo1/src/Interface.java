@@ -10,6 +10,7 @@ import java.awt.*;
 public class Interface extends JFrame implements ActionListener{
 	
 	static final String FICHIER_BIN = "src/data/livres.bin";
+	static final String FICHIER_TABLE_INDEX= "src/data/tableIndex.obj";
 	static final String[] colonnes= {"Numero du Livre", "Titre", "Numero de l'Auteur", "Annee de Publication", 
                                      "Nombre de Pages", "Categorie du Livre"};
 	static JTable table;
@@ -32,6 +33,7 @@ public class Interface extends JFrame implements ActionListener{
     static JButton btnSupprimer;
     static JButton btnAjouter;
     static int numLivreChoisi;
+    static boolean ecoute;
   
     Interface() throws Exception {
 
@@ -39,7 +41,7 @@ public class Interface extends JFrame implements ActionListener{
     	this.getContentPane().setBackground(Color.GRAY);
     	this.getContentPane().setForeground(Color.white);
     	this.setBounds(100,100,857,710);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);	
     	this.getContentPane().setLayout(null);
     	this.setLocationRelativeTo(null);
     	
@@ -129,11 +131,51 @@ public class Interface extends JFrame implements ActionListener{
     	lbl1.setBounds(10, 539, 193, 26);
     	this.getContentPane().add(lbl1);
     	
+    	ecoute= true;
+    	
+    	this.addWindowListener(new WindowAdapter() {
+    	    @Override
+    	    public void windowClosing(WindowEvent e) {
+    	        if (JOptionPane.showConfirmDialog(null, 
+    	            "Are you sure you want to close this window?", "Close Window?", 
+    	            JOptionPane.YES_NO_OPTION,
+    	            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+    	        	sauvegarderTableIndex();
+    	            System.exit(0);
+    	        }
+    	    }
+    	});
+    	
     	this.setVisible(true);
-    	obtenirFichierBinaire(0);
+    	chargerFichierBinaire(0);
     }
     
-    public void ajouterLivre(Object[] nouveauLivre) throws IOException {
+    private void sauvegarderTableIndex() {
+    	try {
+        	File f= new File(FICHIER_TABLE_INDEX);
+			FileOutputStream fileOutputStream= new FileOutputStream(f);
+			ObjectOutputStream objOutputStream= new ObjectOutputStream(fileOutputStream);
+			objOutputStream.writeObject(tableIndex);
+			objOutputStream.close();
+		} catch (IOException e) {
+		}
+    }
+    
+    @SuppressWarnings("unchecked")
+	private void chargerTableIndex() throws ClassNotFoundException {
+    	tableIndex= new TreeMap<>();
+    	try {
+        	File f= new File(FICHIER_TABLE_INDEX);
+			FileInputStream fileInputStream= new FileInputStream(f);
+			ObjectInputStream objInputStream= new ObjectInputStream(fileInputStream);
+			tableIndex= (TreeMap<Integer, Object[]>) objInputStream.readObject();
+			objInputStream.close();
+			fileInputStream.close();
+		} catch (Exception e) {
+		}	
+    }
+    
+	public void ajouterLivre(Object[] nouveauLivre) throws IOException {
         tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
     	int num= (Integer) nouveauLivre[0];
     	String titre= (String) nouveauLivre[1];
@@ -167,6 +209,13 @@ public class Interface extends JFrame implements ActionListener{
                     	tmpWriteBin.seek(adrAncienAttribut);
                     	tmpWriteBin.writeUTF(categorie);  
                     	compteurEnregEffaces--;
+                    	tmpWriteBin.seek(addresse);
+                    	System.out.println(tmpWriteBin.readInt());
+                    	System.out.println(tmpWriteBin.readUTF());
+                    	System.out.println(tmpWriteBin.readInt());
+                    	System.out.println(tmpWriteBin.readInt());
+                    	System.out.println(tmpWriteBin.readInt());
+                    	System.out.println(tmpWriteBin.readUTF());  
                     	break;
             		}
             	}
@@ -180,23 +229,34 @@ public class Interface extends JFrame implements ActionListener{
         	tmpWriteBin.writeInt(annee);
         	tmpWriteBin.writeInt(pages);
         	tmpWriteBin.writeUTF(categorie);
+        	tmpWriteBin.seek(addresse);
+        	System.out.println(tmpWriteBin.readInt());
+        	System.out.println(tmpWriteBin.readUTF());
+        	System.out.println(tmpWriteBin.readInt());
+        	System.out.println(tmpWriteBin.readInt());
+        	System.out.println(tmpWriteBin.readInt());
+        	System.out.println(tmpWriteBin.readUTF());    	
     	}
     	Object[] mapValeur= {addresse,1,tmpWriteBin.getFilePointer()-addresse};
     	tableIndex.put(num, mapValeur);
+    	ecoute= false;
     	tabNumLivres.add(num);
-    	chargerComboBoxLivres(tabNumLivres);
+    	chargerComboBoxLivres();
     	tabAuteurs.add(numAuteur);
-    	chargerComboBoxAuteurs(tabAuteurs);
+    	chargerComboBoxAuteurs();
     	tabCategs.add(categorie);
-    	chargerComboBoxCategs(tabCategs);
+    	chargerComboBoxCategs();
+    	ecoute= true;
 		JOptionPane.showMessageDialog(null, "Livre #"+num+" cree");
         tmpWriteBin.close();  
     }
     
     public void supprimerLivre(int livreChoisi) {
     	tableIndex.get(livreChoisi)[1]= 0;
-    	comboBoxLivres.removeItem(livreChoisi);
-    	tabNumLivres.remove(livreChoisi);
+    	ecoute= false;
+    	tabNumLivres.remove(Integer.valueOf(livreChoisi));
+    	chargerComboBoxLivres();
+    	ecoute= true;
     	compteurEnregEffaces++;
     	JOptionPane.showMessageDialog(null, "Livre #"+livreChoisi+" supprime");  	
     }
@@ -326,31 +386,28 @@ public class Interface extends JFrame implements ActionListener{
 		return nouveauString;
 	}
 	
-	private void chargerComboBoxLivres(Set<Integer> tabNumLivres) {
+	private void chargerComboBoxLivres() {
 		comboBoxLivres.removeAllItems();
 		for(Integer numLivre : tabNumLivres) {
 			comboBoxLivres.addItem(numLivre);
 		}
-		comboBoxLivres.setSelectedIndex(-1);
 	}
 	
-	private void chargerComboBoxCategs(Set<String> tabCategs) {
+	private void chargerComboBoxCategs() {
 		comboBoxCategs.removeAllItems();
 		for(String categ : tabCategs) {
 			comboBoxCategs.addItem(categ);
 		}
-		comboBoxCategs.setSelectedIndex(-1);
 	}
 	
-	private void chargerComboBoxAuteurs(Set<Integer> tabAuteurs) {
+	private void chargerComboBoxAuteurs() {
 		comboBoxAuteurs.removeAllItems();
 		for(Integer numAuteur : tabAuteurs) {
 			comboBoxAuteurs.addItem(numAuteur);
 		}
-		comboBoxAuteurs.setSelectedIndex(-1);
 	}
 	
-	private void obtenirFichierBinaire(int btnRechargerPresse) throws Exception {
+	private void chargerFichierBinaire(int btnRechargerPresse) throws Exception {
         File f= new File(FICHIER_BIN);
         if(!f.exists() || btnRechargerPresse==1) {
             JButton open= new JButton();
@@ -366,6 +423,33 @@ public class Interface extends JFrame implements ActionListener{
             		JOptionPane.showMessageDialog(null, "Veuillez charger le fichier livres.txt svp");
             	}
             }
+        }else {
+    		chargerTableIndex();
+    		tabNumLivres= new TreeSet<>();
+    		tabAuteurs= new TreeSet<>();
+    		tabCategs= new TreeSet<>();
+            int num, numAuteur;
+            String categorie;
+            tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
+            for(Integer numLivre : tableIndex.keySet()) {
+            	if( ( (Integer) tableIndex.get(numLivre)[1]) != 0) {
+                	long addresse = (long) tableIndex.get(numLivre)[0];
+                	tmpWriteBin.seek(addresse);
+                	num= tmpWriteBin.readInt();
+                	tmpWriteBin.readUTF();
+                	numAuteur= tmpWriteBin.readInt();
+                	tmpWriteBin.readInt();
+                	tmpWriteBin.readInt();
+                	categorie= tmpWriteBin.readUTF();
+                    tabNumLivres.add(num);
+                    tabCategs.add(categorie);
+                    tabAuteurs.add(numAuteur);
+            	}     
+            }
+            tmpWriteBin.close();
+            chargerComboBoxLivres();
+        	chargerComboBoxCategs();
+        	chargerComboBoxAuteurs();
         }
 	}
 	
@@ -405,9 +489,9 @@ public class Interface extends JFrame implements ActionListener{
             }
             tmpReadTxt.close();
             tmpWriteBin.close();
-            chargerComboBoxLivres(tabNumLivres);
-        	chargerComboBoxCategs(tabCategs);
-        	chargerComboBoxAuteurs(tabAuteurs);
+            chargerComboBoxLivres();
+        	chargerComboBoxCategs();
+        	chargerComboBoxAuteurs();
             //listerLivres();
         }catch(Exception e) {
         	System.out.println("Gros probleme! "+e.getMessage());
@@ -418,9 +502,8 @@ public class Interface extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnRecharger) {
 			try {
-				obtenirFichierBinaire(1);
+				chargerFichierBinaire(1);
 			}catch(Exception e1) {
-				e1.printStackTrace();
 			}
 		}
 		if(e.getSource() == btnLister) {
@@ -429,7 +512,6 @@ public class Interface extends JFrame implements ActionListener{
 			try {
 				listerLivres();
 			}catch(IOException e1) {
-				e1.printStackTrace();
 			}
 		}
 		if(e.getSource() == btnAjouter) {
@@ -442,45 +524,40 @@ public class Interface extends JFrame implements ActionListener{
 				try {
 					ajouterLivre(nouveauLivre);
 				} catch (IOException e1) {
-					e1.printStackTrace();
 				}
 			}
 		}
-		if(e.getSource() == comboBoxLivres) {
+		if(e.getSource() == comboBoxLivres && ecoute) {
 			numLivreChoisi= (Integer) comboBoxLivres.getSelectedItem();
 			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 		    dtm.setNumRows(0);
 			try {
 				listerLivreChoisi(numLivreChoisi);
 			} catch (IOException e1) {
-				e1.printStackTrace();
 			}
 		}
-		if(e.getSource() == comboBoxCategs) {
+		if(e.getSource() == comboBoxCategs && ecoute) {
 			String categChoisi= (String) comboBoxCategs.getSelectedItem();
 			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 		    dtm.setNumRows(0);
 		    try {
 				listerCategChoisie(categChoisi);
 			} catch (IOException e1) {
-				e1.printStackTrace();
 			}
 		}
-		if(e.getSource() == comboBoxAuteurs) {
+		if(e.getSource() == comboBoxAuteurs && ecoute) {
 			int auteurChoisi= (Integer) comboBoxAuteurs.getSelectedItem();
 			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 		    dtm.setNumRows(0);
 		    try {
 				listerAuteurChoisi(auteurChoisi);
 			} catch (IOException e1) {
-				e1.printStackTrace();
 			}
 		}
 		if(e.getSource() == btnModifier) {
 			try {
 				modifierTitre(numLivreChoisi);
 			} catch (IOException e1) {
-				e1.printStackTrace();
 			}
 		}
 		if(e.getSource() == btnSupprimer) {
