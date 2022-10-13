@@ -137,7 +137,7 @@ public class Interface extends JFrame implements ActionListener{
     	    @Override
     	    public void windowClosing(WindowEvent e) {
     	        if (JOptionPane.showConfirmDialog(null, 
-    	            "Are you sure you want to close this window?", "Close Window?", 
+    	            "Voulez-vous mettre fin a votre session?", "Fermeture du programme", 
     	            JOptionPane.YES_NO_OPTION,
     	            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
     	        	sauvegarderTableIndex();
@@ -183,9 +183,12 @@ public class Interface extends JFrame implements ActionListener{
     	int annee= (Integer) nouveauLivre[3];
     	int pages= (Integer) nouveauLivre[4];
     	String categorie= (String) nouveauLivre[5];
+    	/*
     	int tailleEnreg= 4+(titre.getBytes(StandardCharsets.UTF_8).length)+4+4+
     			         4+(categorie.getBytes(StandardCharsets.UTF_8).length);
+    	*/
     	long addresse= 0;
+    	/*
     	if(compteurEnregEffaces != 0) {
             for(Integer numLivre : tableIndex.keySet()) {
             	if( ( (Integer) tableIndex.get(numLivre)[1]) != 0) {
@@ -202,11 +205,6 @@ public class Interface extends JFrame implements ActionListener{
                     	tmpWriteBin.writeInt(numAuteur);
                     	tmpWriteBin.writeInt(annee);
                     	tmpWriteBin.writeInt(pages);
-                    	adrAncienAttribut= tmpWriteBin.getFilePointer();
-                    	ancienAttribut= tmpWriteBin.readUTF();
-                    	tailleAncienAttribut= ancienAttribut.getBytes(StandardCharsets.UTF_8).length;
-                    	categorie= formaterString(categorie, tailleAncienAttribut);
-                    	tmpWriteBin.seek(adrAncienAttribut);
                     	tmpWriteBin.writeUTF(categorie);  
                     	compteurEnregEffaces--;
                     	tmpWriteBin.seek(addresse);
@@ -221,22 +219,23 @@ public class Interface extends JFrame implements ActionListener{
             	}
             }          
     	}else {
-            addresse= tmpWriteBin.length();
-            tmpWriteBin.seek(addresse);
-        	tmpWriteBin.writeInt(num);
-        	tmpWriteBin.writeUTF(titre);
-        	tmpWriteBin.writeInt(numAuteur);
-        	tmpWriteBin.writeInt(annee);
-        	tmpWriteBin.writeInt(pages);
-        	tmpWriteBin.writeUTF(categorie);
-        	tmpWriteBin.seek(addresse);
-        	System.out.println(tmpWriteBin.readInt());
-        	System.out.println(tmpWriteBin.readUTF());
-        	System.out.println(tmpWriteBin.readInt());
-        	System.out.println(tmpWriteBin.readInt());
-        	System.out.println(tmpWriteBin.readInt());
-        	System.out.println(tmpWriteBin.readUTF());    	
-    	}
+    	*/
+        addresse= tmpWriteBin.length();
+        tmpWriteBin.seek(addresse);
+        tmpWriteBin.writeInt(num);
+        tmpWriteBin.writeUTF(titre);
+        tmpWriteBin.writeInt(numAuteur);
+        tmpWriteBin.writeInt(annee);
+        tmpWriteBin.writeInt(pages);
+        tmpWriteBin.writeUTF(categorie);
+        tmpWriteBin.seek(addresse);
+        System.out.println(tmpWriteBin.readInt());
+        System.out.println(tmpWriteBin.readUTF());
+        System.out.println(tmpWriteBin.readInt());
+        System.out.println(tmpWriteBin.readInt());
+        System.out.println(tmpWriteBin.readInt());
+        System.out.println(tmpWriteBin.readUTF());    	
+    	//}
     	Object[] mapValeur= {addresse,1,tmpWriteBin.getFilePointer()-addresse};
     	tableIndex.put(num, mapValeur);
     	ecoute= false;
