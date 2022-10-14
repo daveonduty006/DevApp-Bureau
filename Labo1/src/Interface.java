@@ -1,7 +1,9 @@
 import java.awt.event.*;
+import java.awt.image.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.*;
 import java.util.*;
+import javax.imageio.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -38,6 +40,8 @@ public class Interface extends JFrame implements ActionListener{
     Interface() throws Exception {
 
     	this.setTitle("Laboratoire 1");
+		ImageIcon logo= new ImageIcon("logo.png"); 
+		this.setIconImage(logo.getImage());
     	this.getContentPane().setBackground(Color.GRAY);
     	this.getContentPane().setForeground(Color.white);
     	this.setBounds(100,100,857,710);
@@ -131,13 +135,17 @@ public class Interface extends JFrame implements ActionListener{
     	lbl1.setBounds(10, 539, 193, 26);
     	this.getContentPane().add(lbl1);
     	
+    	BufferedImage image= ImageIO.read(new File("image.jpg"));
+    	
+    	JLabel imgLabel = new JLabel(new ImageIcon(image));
+    	imgLabel.setBounds(0, 631, 841, 40); 	
+    	getContentPane().add(imgLabel);
+    	
     	ecoute= true;
     	
     	this.addWindowListener(new WindowAdapter() {
     	    @Override
     	    public void windowClosing(WindowEvent e) {
-    			UIManager.put("OptionPane.noButtonText", "Non");
-    			UIManager.put("OptionPane.yesButtonText", "Oui");
     	        if (JOptionPane.showConfirmDialog(null, 
     	            "Voulez-vous mettre fin a votre session?", "Fermeture du programme", 
     	            JOptionPane.YES_NO_OPTION,
@@ -147,6 +155,8 @@ public class Interface extends JFrame implements ActionListener{
     	        }
     	    }
     	});
+    	
+        getRootPane().setBorder(BorderFactory.createBevelBorder(10, Color.BLACK, Color.GRAY));
     	
     	this.setVisible(true);
     	chargerFichierBinaire(0);
