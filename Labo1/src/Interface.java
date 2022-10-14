@@ -136,6 +136,8 @@ public class Interface extends JFrame implements ActionListener{
     	this.addWindowListener(new WindowAdapter() {
     	    @Override
     	    public void windowClosing(WindowEvent e) {
+    			UIManager.put("OptionPane.noButtonText", "Non");
+    			UIManager.put("OptionPane.yesButtonText", "Oui");
     	        if (JOptionPane.showConfirmDialog(null, 
     	            "Voulez-vous mettre fin a votre session?", "Fermeture du programme", 
     	            JOptionPane.YES_NO_OPTION,
