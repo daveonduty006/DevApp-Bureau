@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+   <children>
+      <Label fx:id="myLabel" alignment="CENTER" layoutX="108.0" layoutY="25.0" prefHeight="70.0" prefWidth="383.0" text="Welcome!">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="215.0" layoutY="121.0" prefHeight="40.0" prefWidth="170.0" text="Enter your age">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="myTextField" alignment="CENTER" layoutX="183.0" layoutY="161.0" prefHeight="40.0" prefWidth="234.0" promptText="ex: 21" />
+      <Button fx:id="myButton" layoutX="235.0" layoutY="248.0" mnemonicParsing="false" onAction="#submit" prefHeight="40.0" prefWidth="129.0" text="submit" />
+   </children>
+</AnchorPane>
