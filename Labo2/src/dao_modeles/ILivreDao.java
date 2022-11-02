@@ -11,17 +11,17 @@ public interface ILivreDao {
     
     // Read
     public List<Livre> MdlL_GetAll();
+    
+    public Livre MdlL_GetByIdf(int idf);
 
     public List<Livre> MdlL_GetByCateg(String categ);
-
-    public Livre MdlL_GetByIdf(int idf);
     
     public List<Livre> MdlL_GetByNumAuteur(int numAuteur);
       
     // Update
-    public int MdlF_ModifierTitre(Livre livre);
+    public String MdlF_ModifierTitre(Livre livre);
 
     // Delete
-    public int MdlF_Supprimer(Livre livre);
+    public String MdlF_Supprimer(int idf);
 
 }
