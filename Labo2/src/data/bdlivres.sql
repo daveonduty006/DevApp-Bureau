@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS bdlivres DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE bdlivres;
+DROP TABLE IF EXISTS livres;
+CREATE TABLE livres (
+ idf		INT NOT NULL AUTO_INCREMENT,
+ titre 		VARCHAR(40) NOT NULL,
+ numAuteur 	INT NOT NULL,
+ annee 		INT NOT NULL,
+ pages 		INT NOT NULL,
+ categ 		VARCHAR(20) NOT NULL,
+ CONSTRAINT livres_idf_PK PRIMARY KEY (idf));
+ 
+  
