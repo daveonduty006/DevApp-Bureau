@@ -14,7 +14,7 @@ public class ControleurLivre implements ILivreRequetes{
 
     public static synchronized ControleurLivre getControleurLivre() {
         try {
-            if(CtrL_Instance == null) {
+            if(Dao_Instance == null) {
                 CtrL_Instance = new ControleurLivre();
                 Dao_Instance = LivreDao.getLivreDao();
             }
@@ -27,49 +27,77 @@ public class ControleurLivre implements ILivreRequetes{
     
 	@Override
 	public String CtrL_Enregistrer(Livre livre) {
-        String message;
+		if(Dao_Instance == null) {
+			getControleurLivre();
+		}
+        String message;       
         message = Dao_Instance.MdlL_Enregistrer(livre);
+		Dao_Instance = null;
         return message;
     }
 
 	@Override
 	public List<Livre> CtrL_GetAll() {
+		if(Dao_Instance == null) {
+			getControleurLivre();
+		}
 		List<Livre> listeLivres = new ArrayList<>();
 		listeLivres = Dao_Instance.MdlL_GetAll();
+		Dao_Instance = null;
 		return listeLivres;
 	}
 
 	@Override
 	public Livre CtrL_GetByIdf(int idf) {
+		if(Dao_Instance == null) {
+			getControleurLivre();
+		}
 		Livre livre = Dao_Instance.MdlL_GetByIdf(idf);
+		Dao_Instance = null;
 		return livre;
 	}
 
 	@Override
 	public List<Livre> CtrL_GetByCateg(String categ) {
+		if(Dao_Instance == null) {
+			getControleurLivre();
+		}
 		List<Livre> listeLivres = new ArrayList<>();
 		listeLivres = Dao_Instance.MdlL_GetByCateg(categ);
+		Dao_Instance = null;
 		return listeLivres;
 	}
 
 	@Override
 	public List<Livre> CtrL_GetByNumAuteur(int numAuteur) {
+		if(Dao_Instance == null) {
+			getControleurLivre();
+		}
 		List<Livre> listeLivres = new ArrayList<>();
 		listeLivres = Dao_Instance.MdlL_GetByNumAuteur(numAuteur);
+		Dao_Instance = null;
 		return listeLivres;
 	}
 
 	@Override
 	public String CtrL_ModifierTitre(Livre livre) {
+		if(Dao_Instance == null) {
+			getControleurLivre();
+		}
 		String message;
 		message = Dao_Instance.MdlL_ModifierTitre(livre);
+		Dao_Instance = null;
 		return message;
 	}
 
 	@Override
 	public String CtrL_Supprimer(int idf) {
+		if(Dao_Instance == null) {
+			getControleurLivre();
+		}
 		String message;
 		message = Dao_Instance.MdlL_Supprimer(idf);
+		Dao_Instance = null;
 		return message;
 	}
 

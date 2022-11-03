@@ -9,11 +9,10 @@ public class App {
 
 	public static void main(String[] args) {
 		
-		/*
         // Selon le choix de l'utilisateur faudra appeler la bonne méthode
         // du contrôleur.
-         * 
-         * 
+         
+        /*
         // CAS 1 : Enregistrer un livre (PASSED)
         Livre livre = new Livre();
         livre.setTitre("Conan");
@@ -97,14 +96,17 @@ public class App {
         }
         */
 		
-		
+		/*
 		// CAS 6 : Modifier le titre d'un livre
         ControleurLivre CtrL = ControleurLivre.getControleurLivre();
         Livre livre = CtrL.CtrL_GetByIdf(999);
-        livre.setTitre("test");
+        livre.setTitre("Souviens-toi");
         String message = CtrL.CtrL_ModifierTitre(livre);
         System.out.println(message);
-        
+        */
+		
+		// CAS 7 : Supprimer un livre
+		
 	}
 
 }

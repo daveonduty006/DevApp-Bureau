@@ -16,7 +16,7 @@ public class LivreDao implements ILivreDao{
     private static LivreDao instanceDao = null;
 
     // MYSQL CONNECTION INPUTS
-    //private static final String PILOTE = "com.mysql.jdbc.Driver";
+    //private static final String PILOTE = "com.mysql.cj.jdbc.Driver";
     private static final String URL_BD = "jdbc:mysql://localhost:3306/bdlivres";
     private static final String USAGER = "root";
     private static final String PASS = "";
@@ -56,6 +56,8 @@ public class LivreDao implements ILivreDao{
             }catch(SQLException e) {
                 //e.printStackTrace();
                 throw new RuntimeException(e);
+            }finally {
+            	instanceDao = null;
             }
         }
     }
@@ -216,7 +218,7 @@ public class LivreDao implements ILivreDao{
         PreparedStatement stmt = null;
         String message = "Titre du livre non-modifie";
         try {
-            stmt = conn.prepareStatement(MODIFIER_TITRE);
+        	stmt = conn.prepareStatement(MODIFIER_TITRE);
             stmt.setString(1, livre.getTitre());
             stmt.setInt(2, livre.getIdf());
             stmt.executeUpdate();
