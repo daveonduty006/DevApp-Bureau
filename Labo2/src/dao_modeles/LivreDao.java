@@ -212,7 +212,7 @@ public class LivreDao implements ILivreDao{
 
     // UPDATE
 	@Override
-	public String MdlF_ModifierTitre(Livre livre) {
+	public String MdlL_ModifierTitre(Livre livre) {
         PreparedStatement stmt = null;
         String message = "Titre du livre non-modifie";
         try {
@@ -220,9 +220,9 @@ public class LivreDao implements ILivreDao{
             stmt.setString(1, livre.getTitre());
             stmt.setInt(2, livre.getIdf());
             stmt.executeUpdate();
-            message = "Titre du film bien modifie";
+            message = "Titre du livre bien modifie";
         }catch(SQLException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             throw new RuntimeException(e);
         }finally {
             MdlL_Fermer(stmt);
@@ -233,7 +233,7 @@ public class LivreDao implements ILivreDao{
 
 	// DELETE
 	@Override
-	public String MdlF_Supprimer(int idf) {
+	public String MdlL_Supprimer(int idf) {
         PreparedStatement stmt = null;
         String message = "Livre non-supprime";
         try {

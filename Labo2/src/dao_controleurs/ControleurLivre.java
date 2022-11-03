@@ -60,16 +60,16 @@ public class ControleurLivre implements ILivreRequetes{
 	}
 
 	@Override
-	public String CtrF_ModifierTitre(Livre livre) {
+	public String CtrL_ModifierTitre(Livre livre) {
 		String message;
-		message = Dao_Instance.MdlF_ModifierTitre(livre);
+		message = Dao_Instance.MdlL_ModifierTitre(livre);
 		return message;
 	}
 
 	@Override
-	public String CtrF_Supprimer(int idf) {
+	public String CtrL_Supprimer(int idf) {
 		String message;
-		message = Dao_Instance.MdlF_Supprimer(idf);
+		message = Dao_Instance.MdlL_Supprimer(idf);
 		return message;
 	}
 

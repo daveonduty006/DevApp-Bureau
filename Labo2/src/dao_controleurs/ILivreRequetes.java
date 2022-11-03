@@ -20,9 +20,9 @@ public interface ILivreRequetes {
     public List<Livre> CtrL_GetByNumAuteur(int numAuteur);
       
     // Update
-    public String CtrF_ModifierTitre(Livre livre);
+    public String CtrL_ModifierTitre(Livre livre);
 
     // Delete
-    public String CtrF_Supprimer(int idf);
+    public String CtrL_Supprimer(int idf);
 
 }

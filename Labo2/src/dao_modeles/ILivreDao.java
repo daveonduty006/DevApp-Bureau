@@ -19,9 +19,9 @@ public interface ILivreDao {
     public List<Livre> MdlL_GetByNumAuteur(int numAuteur);
       
     // Update
-    public String MdlF_ModifierTitre(Livre livre);
+    public String MdlL_ModifierTitre(Livre livre);
 
     // Delete
-    public String MdlF_Supprimer(int idf);
+    public String MdlL_Supprimer(int idf);
 
 }
