@@ -155,6 +155,34 @@ public class LivreDao implements ILivreDao{
             MdlL_Fermer(conn);
         }
 	}
+	
+	@Override
+	public List<Livre> MdlL_GetByNumAuteur(int numAuteur) {
+        PreparedStatement stmt = null;
+        List<Livre> listeLivres = new ArrayList<>();
+        try {
+            stmt = conn.prepareStatement(GET_BY_NUM_AUTEUR);
+            stmt.setInt(1, numAuteur);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                Livre livre = new Livre();
+                livre.setIdf(rs.getInt("idf"));
+                livre.setTitre(rs.getString("titre"));
+                livre.setNumAuteur(rs.getInt("numAuteur"));
+                livre.setAnnee(rs.getInt("annee"));
+                livre.setPages(rs.getInt("pages"));
+                livre.setCateg(rs.getString("categ"));
+                listeLivres.add(livre);
+            }
+        }catch(SQLException e) {
+            //e.printStackTrace();
+            throw new RuntimeException(e);
+        }finally {
+            MdlL_Fermer(stmt);
+            MdlL_Fermer(conn);
+        }
+        return listeLivres;
+	}
 
 	@Override
 	public List<Livre> MdlL_GetByCateg(String categ) {
@@ -184,45 +212,17 @@ public class LivreDao implements ILivreDao{
         return listeLivres;
 	}
 
-	@Override
-	public List<Livre> MdlL_GetByNumAuteur(int numAuteur) {
-        PreparedStatement stmt = null;
-        List<Livre> listeLivres = new ArrayList<>();
-        try {
-            stmt = conn.prepareStatement(GET_BY_NUM_AUTEUR);
-            stmt.setInt(1, numAuteur);
-            ResultSet rs = stmt.executeQuery();
-            while(rs.next()) {
-                Livre livre = new Livre();
-                livre.setIdf(rs.getInt("idf"));
-                livre.setTitre(rs.getString("titre"));
-                livre.setNumAuteur(rs.getInt("numAuteur"));
-                livre.setAnnee(rs.getInt("annee"));
-                livre.setPages(rs.getInt("pages"));
-                livre.setCateg(rs.getString("categ"));
-                listeLivres.add(livre);
-            }
-        }catch(SQLException e) {
-            //e.printStackTrace();
-            throw new RuntimeException(e);
-        }finally {
-            MdlL_Fermer(stmt);
-            MdlL_Fermer(conn);
-        }
-        return listeLivres;
-	}
-
     // UPDATE
 	@Override
 	public String MdlL_ModifierTitre(Livre livre) {
         PreparedStatement stmt = null;
-        String message = "Titre du livre non-modifie";
+        String message = "Erreur dans la modification du titre!";
         try {
         	stmt = conn.prepareStatement(MODIFIER_TITRE);
             stmt.setString(1, livre.getTitre());
             stmt.setInt(2, livre.getIdf());
             stmt.executeUpdate();
-            message = "Titre du livre bien modifie";
+            message = "Titre du livre #"+livre.getIdf()+" bien modifie";
         }catch(SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -237,12 +237,12 @@ public class LivreDao implements ILivreDao{
 	@Override
 	public String MdlL_Supprimer(int idf) {
         PreparedStatement stmt = null;
-        String message = "Livre non-supprime";
+        String message = "Erreur dans la suppression du livre!";
         try {
             stmt = conn.prepareStatement(SUPPRIMER);
             stmt.setInt(1, idf);
             stmt.executeUpdate();
-            message = "Livre bien supprime";
+            message = "Livre #"+idf+" bien modifie";
         }catch(SQLException e) {
             //e.printStackTrace();
             throw new RuntimeException(e);

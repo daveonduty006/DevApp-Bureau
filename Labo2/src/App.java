@@ -7,8 +7,8 @@ import dao_modeles.Livre;
 
 public class App {
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws Exception {
+	
         // Selon le choix de l'utilisateur faudra appeler la bonne méthode
         // du contrôleur.
          
@@ -59,10 +59,10 @@ public class App {
 		*/
 		
 		/*
-		// CAS 4 : Lire tous les livres selon Categ
+		// CAS 4 : Lire tous les livres selon NumAuteur
         ControleurLivre CtrL = ControleurLivre.getControleurLivre();
         List<Livre> listeLivres = new ArrayList<>();
-        listeLivres = CtrL.CtrL_GetByCateg("suspense");
+        listeLivres = CtrL.CtrL_GetByNumAuteur(7);
         int compteur = 0;
         for(Livre livre : listeLivres) {
         	compteur++;
@@ -78,10 +78,10 @@ public class App {
         */
 		
 		/*
-		// CAS 5 : Lire tous les livres selon NumAuteur
+		// CAS 5 : Lire tous les livres selon Categ
         ControleurLivre CtrL = ControleurLivre.getControleurLivre();
         List<Livre> listeLivres = new ArrayList<>();
-        listeLivres = CtrL.CtrL_GetByNumAuteur(7);
+        listeLivres = CtrL.CtrL_GetByCateg("suspense");
         int compteur = 0;
         for(Livre livre : listeLivres) {
         	compteur++;
@@ -105,7 +105,14 @@ public class App {
         System.out.println(message);
         */
 		
+		/*
 		// CAS 7 : Supprimer un livre
+		ControleurLivre CtrL = ControleurLivre.getControleurLivre();
+		String message = CtrL.CtrL_Supprimer(999);
+        System.out.println(message);
+        */
+		
+		new Interface();
 		
 	}
 
