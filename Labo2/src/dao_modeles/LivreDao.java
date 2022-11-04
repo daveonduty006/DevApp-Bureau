@@ -77,7 +77,7 @@ public class LivreDao implements ILivreDao{
 	@Override
     public String MdlL_Enregistrer(Livre livre) {
         PreparedStatement stmt = null;
-        String message = "Livre non-enregistre";
+        String message = "Erreur dans l'enregistrement du nouveau livre";
         try {
             stmt = conn.prepareStatement(ENREGISTRER, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, livre.getTitre());
@@ -90,7 +90,7 @@ public class LivreDao implements ILivreDao{
             if(rs.next()) {
                 livre.setIdf(rs.getInt(1));
             }
-            message = "Livre bien enregistre";
+            message = "Livre #"+livre.getIdf()+" bien enregistre";
         }catch(SQLException e) {
             throw new RuntimeException(e);
         }finally {
@@ -216,7 +216,7 @@ public class LivreDao implements ILivreDao{
 	@Override
 	public String MdlL_ModifierTitre(Livre livre) {
         PreparedStatement stmt = null;
-        String message = "Erreur dans la modification du titre!";
+        String message = "Erreur dans la modification du titre du livre!";
         try {
         	stmt = conn.prepareStatement(MODIFIER_TITRE);
             stmt.setString(1, livre.getTitre());
@@ -242,7 +242,7 @@ public class LivreDao implements ILivreDao{
             stmt = conn.prepareStatement(SUPPRIMER);
             stmt.setInt(1, idf);
             stmt.executeUpdate();
-            message = "Livre #"+idf+" bien modifie";
+            message = "Livre #"+idf+" bien supprime";
         }catch(SQLException e) {
             //e.printStackTrace();
             throw new RuntimeException(e);

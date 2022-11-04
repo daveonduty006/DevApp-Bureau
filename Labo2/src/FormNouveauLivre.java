@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -10,10 +9,8 @@ import com.jgoodies.forms.layout.FormSpecs;
 @SuppressWarnings("serial")
 public class FormNouveauLivre extends JDialog implements ActionListener {
 	
-	static Set<Integer> tabNumLivresExistants;
-	private int numLivre, numAuteur, annee, pages;
+	private int numAuteur, annee, pages;
 	private String titre, categorie;
-	JTextField textFieldNumLivre;
 	JTextField textFieldTitre;
 	JTextField textFieldNumAuteur;
 	JTextField textFieldAnnee;
@@ -25,11 +22,8 @@ public class FormNouveauLivre extends JDialog implements ActionListener {
 	JButton btnConfirmer;
 	JButton btnAnnuler;
 	JLabel lblErrChamps;
-	JLabel lblErrNumLivre;
 	
-	FormNouveauLivre(JFrame base, String titre, Set<Integer> tabNumLivres) {
-		tabNumLivresExistants= (TreeSet<Integer>) tabNumLivres;
-		
+	FormNouveauLivre(JFrame base, String titre) {		
 		setTitle(titre);
 		setMinimumSize(new Dimension(540,310));
 		setLocationRelativeTo(null);
@@ -62,14 +56,6 @@ public class FormNouveauLivre extends JDialog implements ActionListener {
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		JLabel lblNewLabel = new JLabel("Numéro du nouveau Livre");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		getContentPane().add(lblNewLabel, "2, 2");
-		
-		textFieldNumLivre = new JTextField();
-		getContentPane().add(textFieldNumLivre, "4, 2, left, default");
-		textFieldNumLivre.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Titre du nouveau Livre");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -142,16 +128,7 @@ public class FormNouveauLivre extends JDialog implements ActionListener {
 		lblErrChamps.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblErrChamps.setForeground(Color.RED);
 		getContentPane().add(lblErrChamps, "6, 6, left, default");
-		
-		lblErrNumLivre = new JLabel("");
-		lblErrNumLivre.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblErrNumLivre.setForeground(Color.RED);
-		getContentPane().add(lblErrNumLivre, "6, 2, left, default");
 				
-	}
-	
-	public int getNumLivre() {
-		return this.numLivre;
 	}
 	
 	public String getTitre() {
@@ -172,10 +149,6 @@ public class FormNouveauLivre extends JDialog implements ActionListener {
 	
 	public String getCategorie() {
 		return this.categorie;
-	}
-	
-	private void setNumLivre(int unNum) {
-		this.numLivre= unNum;
 	}
 	
 	private void setTitre(String unTitre) {
@@ -201,29 +174,23 @@ public class FormNouveauLivre extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnConfirmer) {
-			lblErrNumLivre.setText("");
 			lblErrChamps.setText("");
 			Boolean check= false;
-			if(textFieldNumLivre.getText() != null  &&
-			   textFieldTitre.getText() != null	    &&
+			//
+			if(textFieldTitre.getText()     != null	&&
 			   textFieldNumAuteur.getText() != null &&
-			   textFieldAnnee.getText() != null     &&
-			   textFieldPages.getText() != null     &&
+			   textFieldAnnee.getText()     != null &&
+			   textFieldPages.getText()     != null &&
 			   (rdbtnRoman.isSelected()    || 
 			    rdbtnSuspense.isSelected() ||
 			    rdbtnBD.isSelected()       ||
-			    rdbtnNouvelle.isSelected()   )        ) {
-				int numNouveauLivre= Integer.parseInt(textFieldNumLivre.getText());
-				if(!tabNumLivresExistants.contains(numNouveauLivre)) {
-					check= true;
-				}else{
-					lblErrNumLivre.setText("Numero de Livre deja attitre");
-				}
+			    rdbtnNouvelle.isSelected())) {
+		    //
+				check= true;
 			}else {
 				lblErrChamps.setText("Remplir tous les champs svp");
 			}
 			if(check) {
-				setNumLivre(Integer.parseInt(textFieldNumLivre.getText()));
 				setTitre(textFieldTitre.getText());
 				setNumAuteur(Integer.parseInt(textFieldNumAuteur.getText()));
 				setAnnee(Integer.parseInt(textFieldAnnee.getText()));
@@ -241,7 +208,6 @@ public class FormNouveauLivre extends JDialog implements ActionListener {
 			}
 		}
 		if(e.getSource() == btnAnnuler) {
-			setNumLivre(0);
 			setTitre("");
 			setNumAuteur(0);
 			setAnnee(0);

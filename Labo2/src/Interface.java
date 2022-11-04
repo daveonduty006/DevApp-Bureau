@@ -34,7 +34,7 @@ public class Interface extends JFrame implements ActionListener{
   
     Interface() throws Exception {
 
-    	this.setTitle("Laboratoire 1");
+    	this.setTitle("Laboratoire 2");
 		ImageIcon logo= new ImageIcon("logo.png"); 
 		this.setIconImage(logo.getImage());
     	this.getContentPane().setBackground(Color.GRAY);
@@ -68,14 +68,28 @@ public class Interface extends JFrame implements ActionListener{
     	toolBar.setRollover(true);
     	this.getContentPane().add(toolBar);    	
     	
-    	model= new DefaultTableModel();
     	String[] colonnes= {"Numero du Livre", "Titre", "Numero de l'Auteur", "Annee de Publication", 
                 "Nombre de Pages", "Categorie du Livre"};
+    	model= new DefaultTableModel() {
+			@Override
+    	    public Class<?> getColumnClass(int c) {
+                switch(c) {
+                	case 0:
+                		return Integer.class;
+                	default:
+                		return String.class;
+                }
+			}
+    	};
     	model.setColumnIdentifiers(colonnes);
     	table= new JTable(model);
     	table.setRowHeight(30);
     	table.setAutoCreateRowSorter(true);
     	table.getRowSorter().toggleSortOrder(0);
+    	
+    	DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+    	leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+    	table.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
     	
     	sp= new JScrollPane(table);
     	sp.setBounds(10, 53, 821, 475);
@@ -132,63 +146,32 @@ public class Interface extends JFrame implements ActionListener{
     	imgLabel.setBounds(0, 631, 841, 40); 	
     	getContentPane().add(imgLabel);
     	
-    	ecoute= true;
-    	
     	this.addWindowListener(new WindowAdapter() {
     	    @Override
     	    public void windowClosing(WindowEvent e) {
-    	        if (JOptionPane.showConfirmDialog(null, 
-    	            "Voulez-vous mettre fin a votre session?", "Fermeture du programme", 
-    	            JOptionPane.YES_NO_OPTION,
-    	            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+    			UIManager.put("OptionPane.noButtonText", "Non");
+    			UIManager.put("OptionPane.yesButtonText", "Oui");
+    	        if (JOptionPane.showConfirmDialog(
+    	        	null, "Voulez-vous mettre fin a votre session?", "Fermeture du programme", 
+    	            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) 
+    	        	== JOptionPane.YES_OPTION){
     	            System.exit(0);
     	        }
     	    }
     	});
     	
         getRootPane().setBorder(BorderFactory.createBevelBorder(10, Color.BLACK, Color.GRAY));
+    	ecoute= true;
         chargerInterface();
     	this.setVisible(true);
     }
-    /*
-	public void ajouterLivre(Object[] nouveauLivre) throws IOException {
-        tmpWriteBin= new RandomAccessFile(FICHIER_BIN, "rw");
-    	int num= (Integer) nouveauLivre[0];
-    	String titre= (String) nouveauLivre[1];
-    	int numAuteur= (Integer) nouveauLivre[2];
-    	int annee= (Integer) nouveauLivre[3];
-    	int pages= (Integer) nouveauLivre[4];
-    	String categorie= (String) nouveauLivre[5];
-    	long addresse= 0;
-        addresse= tmpWriteBin.length();
-        tmpWriteBin.seek(addresse);
-        tmpWriteBin.writeInt(num);
-        tmpWriteBin.writeUTF(titre);
-        tmpWriteBin.writeInt(numAuteur);
-        tmpWriteBin.writeInt(annee);
-        tmpWriteBin.writeInt(pages);
-        tmpWriteBin.writeUTF(categorie);
-        tmpWriteBin.seek(addresse);
-        System.out.println(tmpWriteBin.readInt());
-        System.out.println(tmpWriteBin.readUTF());
-        System.out.println(tmpWriteBin.readInt());
-        System.out.println(tmpWriteBin.readInt());
-        System.out.println(tmpWriteBin.readInt());
-        System.out.println(tmpWriteBin.readUTF());    	
-    	Object[] mapValeur= {addresse,1,tmpWriteBin.getFilePointer()-addresse};
-    	tableIndex.put(num, mapValeur);
-    	ecoute= false;
-    	tabNumLivres.add(num);
-    	chargerComboBoxLivres();
-    	tabAuteurs.add(numAuteur);
-    	chargerComboBoxAuteurs();
-    	tabCategs.add(categorie);
-    	chargerComboBoxCategs();
-    	ecoute= true;
-		JOptionPane.showMessageDialog(null, "Livre #"+num+" cree");
-        tmpWriteBin.close();  
+    
+	public void ajouterLivre(Livre nouveauLivre) {
+		ControleurLivre CtrL = ControleurLivre.getControleurLivre();
+		String message = CtrL.CtrL_Enregistrer(nouveauLivre);
+		JOptionPane.showMessageDialog(null, message); 
     }
-    */
+    
     public void supprimerLivre(int numLivreChoisi) {
 		ControleurLivre CtrL = ControleurLivre.getControleurLivre();
 		String message = CtrL.CtrL_Supprimer(numLivreChoisi);
@@ -327,21 +310,28 @@ public class Interface extends JFrame implements ActionListener{
 		    dtm.setNumRows(0);
 		    listerLivres();
 		}
-		/*
 		if(e.getSource() == btnAjouter) {
-			FormNouveauLivre form= new FormNouveauLivre(this, "Ajout d'un Livre", tabNumLivres);
+			FormNouveauLivre form= new FormNouveauLivre(this, "Ajout d'un Livre");
 			form.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 			form.setVisible(true);
-			if(form.getNumLivre() != 0) {
-				Object[] nouveauLivre= {form.getNumLivre(), form.getTitre(), form.getNumAuteur(),
-										form.getAnnee(), form.getPages(), form.getCategorie()};
-				try {
-					ajouterLivre(nouveauLivre);
-				} catch (IOException e1) {
-				}
+			if(form.getNumAuteur() != 0) {
+				Livre livre= new Livre();
+				livre.setTitre(form.getTitre());
+				livre.setNumAuteur(form.getNumAuteur());
+				livre.setAnnee(form.getAnnee());
+				livre.setPages(form.getPages());
+				livre.setCateg(form.getCategorie());
+				ajouterLivre(livre);
+		    	ecoute= false;
+		    	tabNumLivres.add(livre.getIdf());
+		    	chargerComboBoxLivres();
+		    	tabAuteurs.add(livre.getNumAuteur());
+		    	chargerComboBoxAuteurs();
+		    	tabCategs.add(livre.getCateg());
+		    	chargerComboBoxCategs();
+		    	ecoute= true;
 			}
 		}
-		*/
 		if(e.getSource() == comboBoxLivres && ecoute) {
 			int numLivreChoisi= (Integer) comboBoxLivres.getSelectedItem();
 			DefaultTableModel dtm = (DefaultTableModel) table.getModel();
