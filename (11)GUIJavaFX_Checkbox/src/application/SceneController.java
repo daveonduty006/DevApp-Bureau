@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Controller {
+public class SceneController {
 	
 	@FXML
 	private CheckBox myCheckBox;
@@ -16,14 +16,15 @@ public class Controller {
 	@FXML
 	private ImageView myImageView;
 	
-	Image myImage1 = new Image(getClass().getResourceAsStream("lampOff"));
-	Image myImage2 = new Image(getClass().getResourceAsStream("lampOn"));
+	Image myImage1 = new Image(getClass().getResourceAsStream("lampOff.png"));
+	Image myImage2 = new Image(getClass().getResourceAsStream("lampOn.png"));
 	
 	public void change(ActionEvent event) {
 		if(myCheckBox.isSelected()) {
 			myLabel.setText("ON");
 			myImageView.setImage(myImage2);
-		}else {
+		}
+		else {
 			myLabel.setText("OFF");
 			myImageView.setImage(myImage1);
 		}
