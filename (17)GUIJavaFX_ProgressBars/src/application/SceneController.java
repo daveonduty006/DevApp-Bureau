@@ -2,6 +2,7 @@ package application;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -23,7 +24,7 @@ public class SceneController implements Initializable {
 	// in this case we want to display into myLabel integer values between 0 and 100.
 	// However rounding double values previously increased by the user result in rounding errors.
 	// The BigDecimal class gives its user complete control over rounding behavior
-	BigDecimal progress = new BigDecimal(String.format("%.2f", 0.0));
+	BigDecimal progress = new BigDecimal(String.format(Locale.ROOT, "%.2f", 0.0));
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -33,7 +34,7 @@ public class SceneController implements Initializable {
 	
 	public void increaseProgress() {
 		if(progress.doubleValue() < 1) {
-			progress = new BigDecimal(String.format("%.2f", progress.doubleValue() + 0.1));
+			progress = new BigDecimal(String.format(Locale.ROOT, "%.2f", progress.doubleValue() + 0.1));
 			myProgressBar.setProgress(progress.doubleValue());
 			myLabel.setText(Integer.toString( (int)Math.round(progress.doubleValue() * 100)) + "%");
 		}
