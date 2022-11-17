@@ -30,6 +30,7 @@ public class Interface extends JFrame implements ActionListener {
 
     static final String FICHIER_TXT = "src/data/profs.txt";
     static ArrayList<Professeur> listeProfs;
+    static TreeSet<String> listeNoms;
     static Set<Integer> listePositions;
 	static DefaultTableModel model;
     static BufferedReader tmpReadTexte;
@@ -116,13 +117,13 @@ public class Interface extends JFrame implements ActionListener {
 		
 		btnLister = new JButton("Lister");
 		btnLister.setFocusable(false);
-		btnLister.setBounds(286, 79, 89, 23);
+		btnLister.setBounds(277, 79, 89, 23);
 		btnLister.addActionListener(this);
 		contentPane.add(btnLister);
 		
 		btnModifier = new JButton("Modifier");
 		btnModifier.setFocusable(false);
-		btnModifier.setBounds(286, 135, 89, 23);
+		btnModifier.setBounds(277, 135, 89, 23);
 		btnModifier.addActionListener(this);
 		contentPane.add(btnModifier);
 		
@@ -144,11 +145,12 @@ public class Interface extends JFrame implements ActionListener {
 		btnStats.addActionListener(this);
 		contentPane.add(btnStats);
 		
-    	Object[] colonnes= {"Nom", "Automne", "Hiver", "Année", "Temps"};
+    	Object[] colonnes= {"Nom", "Automne", "Hiver", "Annee", "Temps"};
     	model= new DefaultTableModel();
     	model.setColumnIdentifiers(colonnes);
 		
 		table = new JTable(model);
+	   	table.setRowHeight(30);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
 				rangeeChoisie= table.getSelectedRow();
@@ -165,8 +167,6 @@ public class Interface extends JFrame implements ActionListener {
 			}
 		});
 	    rangeeChoisie = table.getSelectedRow();
-	   	table.setRowHeight(30);
-    	table.setAutoCreateRowSorter(true);
     	
     	JScrollPane sp= new JScrollPane(table);
 		sp.setBounds(385, 54, 374, 382);
@@ -176,7 +176,7 @@ public class Interface extends JFrame implements ActionListener {
 		lblMoyenne.setForeground(UIManager.getColor("Button.background"));
 		lblMoyenne.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMoyenne.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblMoyenne.setBounds(44, 332, 209, 14);
+		lblMoyenne.setBounds(46, 332, 209, 14);
 		contentPane.add(lblMoyenne);
 		
 		JLabel lblPireTache = new JLabel("Pire T\u00E2che");
@@ -196,7 +196,7 @@ public class Interface extends JFrame implements ActionListener {
 		txtFieldMoyenne = new JTextField();
 		txtFieldMoyenne.setEditable(false);
 		txtFieldMoyenne.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldMoyenne.setBounds(103, 357, 86, 20);
+		txtFieldMoyenne.setBounds(108, 357, 86, 20);
 		txtFieldMoyenne.setColumns(10);
 		contentPane.add(txtFieldMoyenne);
 		
@@ -229,8 +229,7 @@ public class Interface extends JFrame implements ActionListener {
     	
 		setVisible(true);
 		
-    	chargerFichierTexte();
-			
+    	chargerFichierTexte();			
 	}
 	
 	public static void calculer() {
@@ -256,7 +255,9 @@ public class Interface extends JFrame implements ActionListener {
 			}
 		}
 		listeProfs.remove(index);
-		JOptionPane.showMessageDialog(null, "Retrait à la liste apportée");
+		listeNoms.remove(nom);
+		listePositions.remove(Integer.parseInt(txtFieldPosition.getText()));
+		JOptionPane.showMessageDialog(null, "Retrait a la liste apporte");
 	}
 	
 	public static void ajouter() {
@@ -269,7 +270,9 @@ public class Interface extends JFrame implements ActionListener {
 			int position = ((TreeSet<Integer>)listePositions).last() + 1;
 		    Professeur unProf= new Professeur(nom, tacheAutomne, tacheHiver, position);
 			listeProfs.add(unProf);
-			JOptionPane.showMessageDialog(null, "Ajout à la liste apportée");
+			listeNoms.add(nom);
+			listePositions.add(position);
+			JOptionPane.showMessageDialog(null, "Ajout a la liste apporte");
 		}
 	}
 	
@@ -288,29 +291,35 @@ public class Interface extends JFrame implements ActionListener {
 		listeProfs.get(index).setTacheAutomne(tacheAutomne);
 		listeProfs.get(index).setTacheHiver(tacheHiver);
 		listeProfs.get(index).setPosition(position);
-		JOptionPane.showMessageDialog(null, "Modification à la liste apportée");
+		JOptionPane.showMessageDialog(null, "Modification a la liste apportee");
 	}
 	
 	public static void listerProfs() {
     	String nom, message;
     	int tacheHiver, tacheAutomne, tacheAnnee;
-        for(Professeur unProf : listeProfs) {
-        	nom= unProf.getNom();
-        	tacheAutomne= unProf.getTacheAutomne();
-        	tacheHiver= unProf.getTacheHiver();
-        	tacheAnnee= tacheAutomne + tacheHiver;
-        	message= unProf.message();
-        	Object[] rangee= {nom, String.valueOf(tacheAutomne), String.valueOf(tacheHiver), String.valueOf(tacheAnnee), message};
-        	model.addRow(rangee);
-        } 
+    	for(String unNom : listeNoms) {
+    		for(Professeur unProf : listeProfs) {
+    			if(unProf.getNom().equalsIgnoreCase(unNom)) {
+    	        	nom= unProf.getNom();
+    	        	tacheAutomne= unProf.getTacheAutomne();
+    	        	tacheHiver= unProf.getTacheHiver();
+    	        	tacheAnnee= tacheAutomne + tacheHiver;
+    	        	message= unProf.message();
+    	        	Object[] rangee= {nom, String.valueOf(tacheAutomne), String.valueOf(tacheHiver), String.valueOf(tacheAnnee), message};
+    	        	model.addRow(rangee);
+    	        	break;
+    			}
+    		}
+    	} 
 	}
 	
 	private static void chargerFichierTexte() {
 		listeProfs= new ArrayList<>();
-		listePositions = new TreeSet<>();
+		listeNoms= new TreeSet<>(); 
+		listePositions= new TreeSet<>();
         String elems[]= new String[4];
-        String nom, message;
-        int tacheAutomne, tacheHiver, tacheAnnee, position;
+        String nom;
+        int tacheAutomne, tacheHiver, position;
         try{
             tmpReadTexte= new BufferedReader(new FileReader(FICHIER_TXT));
             String ligne= tmpReadTexte.readLine();
@@ -322,10 +331,7 @@ public class Interface extends JFrame implements ActionListener {
                 position= Integer.parseInt(elems[3]);
                 Professeur unProf= new Professeur(nom, tacheAutomne, tacheHiver, position);
                 listeProfs.add(unProf);
-                tacheAnnee= unProf.calculerTache();
-                message= unProf.message();
-                Object[] rangee= {nom, String.valueOf(tacheAutomne), String.valueOf(tacheHiver), tacheAnnee, message};
-                model.addRow(rangee);
+                listeNoms.add(nom);
                 listePositions.add(position);
                 ligne= tmpReadTexte.readLine();
             }
@@ -333,6 +339,7 @@ public class Interface extends JFrame implements ActionListener {
         }catch(Exception e) {
         	System.out.println("Gros probleme! "+e.getMessage());
         }
+        listerProfs();
 	}
 
 	@Override
@@ -344,7 +351,7 @@ public class Interface extends JFrame implements ActionListener {
 		}
 		if(e.getSource() == btnModifier) {
 			if(rangeeChoisie < 0) {
-				JOptionPane.showMessageDialog(null, "Veuillez choisir une rangée svp");
+				JOptionPane.showMessageDialog(null, "Veuillez choisir une rangee svp");
 			}else {
 				modifier();
 			}
@@ -354,7 +361,7 @@ public class Interface extends JFrame implements ActionListener {
 		}
 		if(e.getSource() == btnRetirer) {
 			if(rangeeChoisie < 0) {
-				JOptionPane.showMessageDialog(null, "Veuillez choisir une rangée svp");
+				JOptionPane.showMessageDialog(null, "Veuillez choisir une rangee svp");
 			}else {
 				retirer();
 			}
