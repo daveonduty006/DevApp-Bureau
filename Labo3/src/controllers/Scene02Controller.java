@@ -33,7 +33,7 @@ public class Scene02Controller {
                     buttonExSelEmprunter, buttonExSelAcheter,
                     btnAjouterExCancel, btnAjouterEx, buttonExSelGetImg, buttonExNewGetImg;
 
-    @FXML private Label labelExSelId, labelExSelNbEmprunts, labelExSelPrixAjuste, 
+    @FXML private Label labelExSelId, labelExSelNbEmprunts, labelExSelPrixAjuste, labelExSelPrixEmprunt,
                     labelAjoutExNewErreur1, labelAjoutExNewErreur2, labelAjoutExNewErreur3,
                     labelAjoutExNewErreur4, labelAjoutExNewErreur5, labelAjoutExNewErreur6,
                     labelAjoutExNewErreur7;
@@ -60,6 +60,7 @@ public class Scene02Controller {
         textFieldExSelPrix.setDisable(true);
         labelExSelNbEmprunts.setText(null);
         labelExSelPrixAjuste.setText(null);
+        labelExSelPrixEmprunt.setText(null);
         textAreaExSelPistes.setText(null);
         textAreaExSelPistes.setDisable(true);
         textFieldExSelCheminImg.setText(null);
@@ -257,6 +258,8 @@ public class Scene02Controller {
         double moitie = exemplaire.getPrixEx() / 2;
         if (prixAjuste < moitie) { prixAjuste = moitie; }
         labelExSelPrixAjuste.setText(String.format("%.2f", prixAjuste));
+        double prixEmprunt = exemplaire.getPrixEx() / 3;
+        labelExSelPrixEmprunt.setText(String.format("%.2f", prixEmprunt));
         textAreaExSelPistes.setText(exemplaire.getPistesEx());
         textAreaExSelPistes.setDisable(false);
         textFieldExSelCheminImg.setText(exemplaire.getCheminImgEx());
