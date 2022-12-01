@@ -255,10 +255,10 @@ public class Scene02Controller {
         textFieldExSelPrix.setDisable(false);
         labelExSelNbEmprunts.setText(Integer.toString(exemplaire.getNbEmpruntsEx()));
         double prixAjuste = exemplaire.getPrixEx() - exemplaire.getNbEmpruntsEx();
-        double moitie = exemplaire.getPrixEx() / 2;
+        double moitie = exemplaire.getPrixEx() / 1.25;
         if (prixAjuste < moitie) { prixAjuste = moitie; }
         labelExSelPrixAjuste.setText(String.format("%.2f", prixAjuste));
-        double prixEmprunt = exemplaire.getPrixEx() / 3;
+        double prixEmprunt = exemplaire.getPrixEx() / 4;
         labelExSelPrixEmprunt.setText(String.format("%.2f", prixEmprunt));
         textAreaExSelPistes.setText(exemplaire.getPistesEx());
         textAreaExSelPistes.setDisable(false);
