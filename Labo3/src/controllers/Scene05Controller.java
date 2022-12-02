@@ -1,6 +1,8 @@
 package controllers;
 
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +16,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import models.Emprunt;
 import models.Exemplaire;
 import models.Usager;
+import models.Vente;
 
 public class Scene05Controller implements Initializable {
     
@@ -52,15 +56,47 @@ public class Scene05Controller implements Initializable {
 	
 	@FXML
 	void btnPayerCurrentTrHandler(ActionEvent e){
-		
+		//
+		listeExDansLaTr.forEach((cle,valeur) -> {
+			if("Emprunt".equals(valeur)) {
+				EmpruntController empruntCtrl = EmpruntController.getControleurEm();
+				Emprunt emprunt = new Emprunt();
+				emprunt.setIdEm(0);
+				emprunt.setIdEx(cle.getIdEx());
+				emprunt.setIdU(usagerChoisi.getIdU());
+				Instant now = Instant.now();
+				Timestamp ts = Timestamp.from(now);
+				emprunt.setDateEm(ts);
+				emprunt.setNbJoursEm(7);
+				empruntCtrl.CtrEm_create(emprunt);
+				// UPDATE FLAG TO TRUE FOR estEmprunte HERE
+			}
+			if("Vente".equals(valeur)) {
+				VenteController venteCtrl = VenteController.getControleurV();
+				Vente vente = new Vente();
+				vente.setIdV(0);
+				vente.setIdEx(cle.getIdEx());
+				vente.setIdU(usagerChoisi.getIdU());
+				Instant now = Instant.now();
+				Timestamp ts = Timestamp.from(now);
+				vente.setDateV(ts);
+				venteCtrl.CtrV_create(vente);
+				// UPDATE FLAG TO TRUE FOR estVendu HERE
+			}
+		});
 	}
 	
 	@FXML
 	void btnCancelCurrentTrHandler(ActionEvent e) {
-		
+		textAreaUsgCurrentTr.clear();
+		textAreaUsgCurrentTr.setDisable(true);
+		lblMontantSTCurrentTr.setText(null);
+		lblMontantATCurrentTr.setText(null);
+		listeExDansLaTr.clear();
 	}
 	
 	public void ajouterEmprunt(int idEx) {
+		textAreaUsgCurrentTr.setDisable(false);
 		ExemplaireController exemplaireCtrl = ExemplaireController.getControleurEx();
 		Exemplaire exemplaire = exemplaireCtrl.CtrEx_read(idEx);
 		String prixEmprunt = String.format("%.2f",exemplaire.getPrixEx()/4);
@@ -74,6 +110,7 @@ public class Scene05Controller implements Initializable {
 	}
 	
 	public void ajouterVente(int idEx) {
+		textAreaUsgCurrentTr.setDisable(false);
 		ExemplaireController exemplaireCtrl = ExemplaireController.getControleurEx();
 		Exemplaire exemplaire = exemplaireCtrl.CtrEx_read(idEx);
 		double prixAjuste = exemplaire.getPrixEx() - exemplaire.getNbEmpruntsEx();

@@ -45,7 +45,7 @@ public class VenteDao {
             stmt.setInt(1, vente.getIdV());
             stmt.setInt(2, vente.getIdEx());
             stmt.setInt(3, vente.getIdU());
-            stmt.setDate(4, vente.getDateV());
+            stmt.setTimestamp(4, vente.getDateV());
             stmt.executeUpdate();
         } 
         catch (SQLException e) { 
@@ -70,7 +70,7 @@ public class VenteDao {
                 Vente.setIdV(rs.getInt("idV"));
                 Vente.setIdEx(rs.getInt("idEx"));
                 Vente.setIdU(rs.getInt("idU"));
-                Vente.setDateV(rs.getDate("dateV"));
+                Vente.setDateV(rs.getTimestamp("dateV"));
                 listeVentes.add(Vente);
             }
         } 
