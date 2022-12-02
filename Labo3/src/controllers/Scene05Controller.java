@@ -3,7 +3,6 @@ package controllers;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -12,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -37,6 +37,8 @@ public class Scene05Controller implements Initializable {
 	private TextArea textAreaUsgCurrentTr;
 	@FXML
 	private Label lblMontantSTCurrentTr, lblMontantATCurrentTr;
+	@FXML
+	private Button btnCancelCurrentTr, btnPayerCurrentTr;
 	
 	Usager usagerChoisi;
 	Map<Exemplaire,String> listeExDansLaTr = new HashMap<>();
@@ -69,7 +71,13 @@ public class Scene05Controller implements Initializable {
 				emprunt.setDateEm(ts);
 				emprunt.setNbJoursEm(7);
 				empruntCtrl.CtrEm_create(emprunt);
-				// UPDATE FLAG TO TRUE FOR estEmprunte HERE
+				cle.setNbEmpruntsEx(cle.getNbEmpruntsEx()+1);
+				cle.setEstEmprunte(true);
+		        ExemplaireController exemplaireCtrl = ExemplaireController.getControleurEx();
+		        exemplaireCtrl.CtrEx_update(cle);
+				String texte = "L'exemplaire " +cle.getTitreEx()+ " de " +cle.getArtisteEx()+ " a été emprunté par l'usager #"+usagerChoisi.getIdU()+".";
+		        scene00Controller.ajouterHistorique(new Timestamp(System.currentTimeMillis()), texte);
+		        scene00Controller.refreshTblView01();
 			}
 			if("Vente".equals(valeur)) {
 				VenteController venteCtrl = VenteController.getControleurV();
@@ -81,9 +89,16 @@ public class Scene05Controller implements Initializable {
 				Timestamp ts = Timestamp.from(now);
 				vente.setDateV(ts);
 				venteCtrl.CtrV_create(vente);
-				// UPDATE FLAG TO TRUE FOR estVendu HERE
+				cle.setEstEmprunte(false);
+				cle.setEstVendu(true);
+		        ExemplaireController exemplaireCtrl = ExemplaireController.getControleurEx();
+		        exemplaireCtrl.CtrEx_update(cle);
+				String texte = "L'exemplaire " +cle.getTitreEx()+ " de " +cle.getArtisteEx()+ " a été acheté par l'usager #"+usagerChoisi.getIdU()+".";
+		        scene00Controller.ajouterHistorique(new Timestamp(System.currentTimeMillis()), texte);
+		        scene00Controller.refreshTblView01();
 			}
 		});
+		btnCancelCurrentTr.fire();
 	}
 	
 	@FXML
