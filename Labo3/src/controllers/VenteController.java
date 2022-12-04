@@ -1,5 +1,7 @@
 package controllers;
 
+import javafx.collections.ObservableList;
+import models.Emprunt;
 import models.Vente;
 import models.VenteDao;
 
@@ -26,6 +28,10 @@ public class VenteController {
 
     public void CtrV_create(Vente vente) {
         Dao_Instance.MdlV_create(vente);
+    }
+    
+    public ObservableList<Vente> CtrV_readAllParUsager(int idU) {
+    	return Dao_Instance.MdlV_readAllParUsager(idU);
     }
 
     /*

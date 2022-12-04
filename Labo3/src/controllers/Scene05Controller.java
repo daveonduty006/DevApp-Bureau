@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +15,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import models.Emprunt;
 import models.Exemplaire;
@@ -36,12 +40,25 @@ public class Scene05Controller implements Initializable {
 	@FXML
 	private TextArea textAreaUsgCurrentTr;
 	@FXML
-	private Label lblMontantSTCurrentTr, lblMontantATCurrentTr;
+	private Label lblMontantSTCurrentTr, lblMontantATCurrentTr, lblUsgIDAllTr;
 	@FXML
 	private Button btnCancelCurrentTr, btnPayerCurrentTr;
 	
+    @FXML private TableView<Emprunt> tableView01;
+    @FXML private TableColumn<Emprunt, Integer> tableView01_Col01;
+    @FXML private TableColumn<Emprunt, Integer> tableView01_Col02;
+    @FXML private TableColumn<Emprunt, Integer> tableView01_Col03;
+    @FXML private TableColumn<Emprunt, Timestamp> tableView01_Col04;
+    
+    @FXML private TableView<Vente> tableView02;
+    @FXML private TableColumn<Vente, Integer> tableView02_Col01;
+    @FXML private TableColumn<Vente, Integer> tableView02_Col02;
+    @FXML private TableColumn<Vente, Timestamp> tableView02_Col03;
+	
 	Usager usagerChoisi;
 	Map<Exemplaire,String> listeExDansLaTr = new HashMap<>();
+	ObservableList<Emprunt> listeEmDeUsager;
+	ObservableList<Vente> listeVDeUsager;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -53,7 +70,39 @@ public class Scene05Controller implements Initializable {
 		comboBoxUsgCurrentTr.setOnAction(event -> {
 			int usgPos = comboBoxUsgCurrentTr.getSelectionModel().getSelectedIndex();
 			usagerChoisi = listeUsagers.get(usgPos);
+			lblUsgIDAllTr.setText(String.valueOf(usagerChoisi.getIdU()));
+	        tableView01_Col01.setCellValueFactory(new PropertyValueFactory<Emprunt, Integer>("idEm"));
+	        tableView01_Col02.setCellValueFactory(new PropertyValueFactory<Emprunt, Integer>("idEx"));
+	        tableView01_Col03.setCellValueFactory(new PropertyValueFactory<Emprunt, Integer>("nbJoursEm"));
+	        tableView01_Col04.setCellValueFactory(new PropertyValueFactory<Emprunt, Timestamp>("dateEm"));
+	        tableView02_Col01.setCellValueFactory(new PropertyValueFactory<Vente, Integer>("idV"));
+	        tableView02_Col02.setCellValueFactory(new PropertyValueFactory<Vente, Integer>("idEx"));
+	        tableView02_Col03.setCellValueFactory(new PropertyValueFactory<Vente, Timestamp>("dateV"));
+	        refreshTblView01();
+	        refreshTblView02();
 		});
+	}
+	
+	public void refreshTblView01() {
+        Thread async_refreshTblView01 = new Thread(() -> {
+        	listeEmDeUsager = (EmpruntController.getControleurEm()).CtrEm_readAllParUsager(usagerChoisi.getIdU());
+            Platform.runLater(() -> { 
+                this.tableView01.setItems(listeEmDeUsager);
+            });
+            
+	    });
+	    async_refreshTblView01.start();
+	}
+	
+	public void refreshTblView02() {
+        Thread async_refreshTblView02 = new Thread(() -> {
+        	listeVDeUsager = (VenteController.getControleurV()).CtrV_readAllParUsager(usagerChoisi.getIdU());
+            Platform.runLater(() -> { 
+                this.tableView02.setItems(listeVDeUsager);
+            });
+            
+	    });
+	    async_refreshTblView02.start();
 	}
 	
 	@FXML
@@ -78,6 +127,8 @@ public class Scene05Controller implements Initializable {
 				String texte = "L'exemplaire " +cle.getTitreEx()+ " de " +cle.getArtisteEx()+ " a été emprunté par l'usager #"+usagerChoisi.getIdU()+".";
 		        scene00Controller.ajouterHistorique(new Timestamp(System.currentTimeMillis()), texte);
 		        scene00Controller.refreshTblView01();
+		        refreshTblView01();
+		        refreshTblView02();
 			}
 			if("Vente".equals(valeur)) {
 				VenteController venteCtrl = VenteController.getControleurV();
@@ -96,6 +147,8 @@ public class Scene05Controller implements Initializable {
 				String texte = "L'exemplaire " +cle.getTitreEx()+ " de " +cle.getArtisteEx()+ " a été acheté par l'usager #"+usagerChoisi.getIdU()+".";
 		        scene00Controller.ajouterHistorique(new Timestamp(System.currentTimeMillis()), texte);
 		        scene00Controller.refreshTblView01();
+		        refreshTblView01();
+		        refreshTblView02();
 			}
 		});
 		btnCancelCurrentTr.fire();
