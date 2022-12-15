@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane fx:id="scene04" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Scene04Controller">
+<AnchorPane fx:id="scene04" prefHeight="676.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Scene04Controller">
    <children>
-      <Label layoutX="149.0" layoutY="153.0" text="Vue no. 4444" textFill="WHITE" />
+      <TableView fx:id="tableView01" layoutX="86.0" layoutY="70.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
+        <columns>
+            <TableColumn fx:id="tableView01_Col01" PrefWidth="80.0" resizable="false" text="Id Emprunt" />
+            <TableColumn fx:id="tableView01_Col02" PrefWidth="90.0" resizable="false" text="Id Exemplaire" />
+            <TableColumn fx:id="tableView01_Col03" PrefWidth="160.0" resizable="false" text="Album" />
+            <TableColumn fx:id="tableView01_Col04" prefWidth="110.0" resizable="false" text="Artiste" />
+            <TableColumn fx:id="tableView01_Col05" prefWidth="80.0" resizable="false" text="Genre" />
+            <TableColumn fx:id="tableView01_Col06" prefWidth="60.0" resizable="false" text="Année" />
+            <TableColumn fx:id="tableView01_Col07" prefWidth="70.0" resizable="false" text="x Emprunté" />
+            <TableColumn fx:id="tableView01_Col08" prefWidth="90.0" resizable="false" text="Prix d'Emprunt" />
+            <TableColumn fx:id="tableView01_Col09" prefWidth="80.0" resizable="false" text="Id Usager" />
+            <TableColumn fx:id="tableView01_Col10" prefWidth="90.0" resizable="false" text="Date" />
+            <TableColumn fx:id="tableView01_Col11" prefWidth="100.0" resizable="false" text="Jours Emprunté" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

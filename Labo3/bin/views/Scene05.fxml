@@ -28,7 +28,7 @@
       <Label layoutX="782.0" layoutY="63.0" text="EMPRUNTS" textFill="WHITE" />
       <TableView fx:id="tableView01" layoutX="606.0" layoutY="84.0" prefHeight="275.0" prefWidth="413.0">
         <columns>
-          <!-- int idEm, int idEx, nbJoursEm, date dateEm -->
+          <!-- int idEm, int idEx, int nbJoursEm, date dateEm -->
           <TableColumn fx:id="tableView01_Col01" prefWidth="80.0" resizable="false" text="Id" />
           <TableColumn fx:id="tableView01_Col02" prefWidth="80.0" resizable="false" text="IdEx" />
           <TableColumn fx:id="tableView01_Col03" prefWidth="110.0" resizable="false" text="Durée" />
